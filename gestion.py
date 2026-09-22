@@ -1,12 +1,12 @@
 import json
 import re
 import secrets
-import sqlite3
-from datetime import date, timedelta
+import time
+from datetime import date
 import pandas as pd
 import streamlit as st
+from db import q, run, clave_ok
 
-BD = "negocios.db"
 st.set_page_config(page_title="Gestion de membresias", layout="wide")
 
 if "t" in st.query_params:
@@ -15,20 +15,8 @@ if "t" in st.query_params:
     st.stop()
 
 
-def q(sql, p=()):
-    with sqlite3.connect(BD) as c:
-        return pd.read_sql_query(sql, c, params=p)
-
-
-def run(sql, p=()):
-    with sqlite3.connect(BD) as c:
-        c.execute("PRAGMA foreign_keys = ON")
-        cur = c.execute(sql, p)
-        return cur.lastrowid
-
-
 def evento(nid, cid, tipo, detalle):
-    run("INSERT INTO evento (negocio_id, cliente_id, tipo, fecha, detalle) VALUES (?,?,?,?,?)",
+    run("INSERT INTO evento (negocio_id, cliente_id, tipo, fecha, detalle) VALUES (%s,%s,%s,%s,%s)",
         (nid, cid, tipo, date.today().isoformat(), detalle))
 
 
@@ -44,25 +32,48 @@ def fmt(d):
     return pd.to_datetime(d).strftime("%d/%m/%Y") if pd.notna(d) and d else "-"
 
 
-negocios = q("SELECT * FROM negocio ORDER BY id")
-nid = st.sidebar.selectbox("Negocio", negocios["id"],
-                           format_func=lambda i: negocios.set_index("id").loc[i, "nombre"])
+# ---------- Login ----------
+if "usuario" not in st.session_state:
+    st.title("Acceso para gerentes")
+    fallos = st.session_state.get("fallos", 0)
+    with st.form("login"):
+        email = st.text_input("Email")
+        clave = st.text_input("Contrasena", type="password")
+        if st.form_submit_button("Entrar"):
+            if fallos >= 5:
+                time.sleep(3)                       # frena a quien prueba contrasenas a lo loco
+            u = q("SELECT * FROM usuario WHERE email=%s AND activo", (email.strip().lower(),))
+            if len(u) and clave_ok(clave, u.iloc[0]["clave"]):
+                st.session_state["usuario"] = u.iloc[0].drop("clave").to_dict()
+                st.session_state["fallos"] = 0
+                st.rerun()
+            st.session_state["fallos"] = fallos + 1
+            st.error("Email o contrasena incorrectos")
+    st.stop()
+
+usuario = st.session_state["usuario"]
+nid = int(usuario["negocio_id"])
+st.sidebar.write(f"Sesion: **{usuario['email']}**")
+if st.sidebar.button("Cerrar sesion"):
+    del st.session_state["usuario"]
+    st.rerun()
+negocios = q("SELECT * FROM negocio WHERE id=%s", (nid,))
 cfg = json.loads(negocios.set_index("id").loc[nid, "config"])
-CLI = cfg.get("cliente", "cliente")
+CLI = cfg.get("cliente", "cliente")            # socio / alumno / miembro
 CLIS = CLI + "s"
 hoy = date.today()
 mes = hoy.strftime("%Y-%m")
 
-planes = q("SELECT * FROM plan WHERE negocio_id=? AND activo=1", (nid,))
+planes = q("SELECT * FROM plan WHERE negocio_id=%s AND activo=1", (nid,))
 clientes = q("""
     SELECT c.*, m.id AS membresia_id, m.estado AS membresia, p.nombre AS plan, p.importe,
            (SELECT MAX(fecha) FROM asistencia a WHERE a.cliente_id=c.id) AS ultima,
-           (SELECT estado FROM cobro co WHERE co.membresia_id=m.id AND co.periodo=?) AS cobro_mes
+           (SELECT estado FROM cobro co WHERE co.membresia_id=m.id AND co.periodo=%s) AS cobro_mes
     FROM cliente c
     LEFT JOIN membresia m ON m.cliente_id=c.id
          AND m.id=(SELECT MAX(id) FROM membresia WHERE cliente_id=c.id)
     LEFT JOIN plan p ON p.id=m.plan_id
-    WHERE c.negocio_id=?""", (mes, nid))
+    WHERE c.negocio_id=%s""", (mes, nid))
 clientes["dias sin venir"] = (pd.Timestamp(hoy) - pd.to_datetime(clientes["ultima"])).dt.days
 socios = clientes[clientes["estado"] != "prueba"]
 pruebas = clientes[clientes["estado"] == "prueba"]
@@ -82,7 +93,7 @@ def situacion(r):
 
 socios = socios.assign(situacion=socios.apply(situacion, axis=1))
 activos = socios[socios["membresia"] == "activa"]
-cobros_mes = q("SELECT estado, SUM(importe) AS total FROM cobro WHERE negocio_id=? AND periodo=? GROUP BY estado",
+cobros_mes = q("SELECT estado, SUM(importe) AS total FROM cobro WHERE negocio_id=%s AND periodo=%s GROUP BY estado",
                (nid, mes)).set_index("estado")["total"]
 
 st.title(negocios.set_index("id").loc[nid, "nombre"])
@@ -97,6 +108,7 @@ k5.metric("Clases de prueba", len(pruebas))
 t1, t2, t3, t4, t5, t6 = st.tabs([CLIS.capitalize(), f"Alta de {CLI}", "Ficha", "Cobros del mes",
                                    "Pruebas", "Clases de hoy"])
 
+# ---------- Listado ----------
 with t1:
     ORDEN = ["Pendiente de pago", "Riesgo de baja", "Al dia", "Congelado", "Baja"]
     a, b = st.columns([1, 2])
@@ -115,6 +127,7 @@ with t1:
                     "ultima clase", "dias sin venir"]].rename(columns={"id": "nº"}),
                  hide_index=True, width="stretch")
 
+# ---------- Alta ----------
 with t2:
     st.caption("Obligatorio: nombre y telefono. El numero se genera solo.")
     with st.form("alta", clear_on_submit=True):
@@ -139,18 +152,19 @@ with t2:
                 st.error(f"Ese telefono ya es de {e['nombre']} (nº {e['id']}, estado {e['estado']})")
             else:
                 cid = run("""INSERT INTO cliente (negocio_id, nombre, apellidos, telefono, email, dni,
-                             estado, fecha_alta, token) VALUES (?,?,?,?,?,?,'activo',?,?)""",
+                             estado, fecha_alta, token) VALUES (%s,%s,%s,%s,%s,%s,'activo',%s,%s) RETURNING id""",
                           (nid, nombre.strip(), apellidos.strip() or None, t, email.strip() or None,
                            dni.strip().upper() or None, hoy.isoformat(), secrets.token_urlsafe(8)))
                 mid = run("""INSERT INTO membresia (negocio_id, cliente_id, plan_id, estado, fecha_inicio)
-                             VALUES (?,?,?,'activa',?)""", (nid, cid, int(plan), hoy.isoformat()))
+                             VALUES (%s,%s,%s,'activa',%s) RETURNING id""", (nid, cid, int(plan), hoy.isoformat()))
                 run("""INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado)
-                       VALUES (?,?,?,?,'pendiente')""",
+                       VALUES (%s,%s,%s,%s,'pendiente')""",
                     (nid, mid, mes, float(planes.set_index("id").loc[plan, "importe"])))
                 evento(nid, cid, "alta", "Alta y membresia")
                 st.success(f"{nombre} dado de alta con el numero {cid}")
                 st.rerun()
 
+# ---------- Ficha ----------
 with t3:
     o = socios.sort_values("nombre")
     cid = st.selectbox(CLI.capitalize(), o["id"],
@@ -183,7 +197,7 @@ with t3:
                 elif t in clientes[clientes["id"] != cid]["telefono"].values:
                     st.error("Ese telefono ya es de otra persona")
                 else:
-                    run("UPDATE cliente SET nombre=?, apellidos=?, telefono=?, email=?, notas=? WHERE id=?",
+                    run("UPDATE cliente SET nombre=%s, apellidos=%s, telefono=%s, email=%s, notas=%s WHERE id=%s",
                         (nombre.strip(), apellidos.strip() or None, t, email.strip() or None,
                          notas.strip() or None, int(cid)))
                     evento(nid, int(cid), "edicion", "Datos actualizados")
@@ -193,44 +207,45 @@ with t3:
     b1, b2, _ = st.columns([1, 1, 3])
     if s["membresia"] == "activa":
         if b1.button("Congelar membresia"):
-            run("UPDATE membresia SET estado='congelada' WHERE id=?", (mid,))
+            run("UPDATE membresia SET estado='congelada' WHERE id=%s", (mid,))
             evento(nid, int(cid), "congelacion", "Membresia congelada")
             st.rerun()
         if b2.button("Dar de baja"):
-            run("UPDATE membresia SET estado='baja', fecha_fin=? WHERE id=?", (hoy.isoformat(), mid))
-            run("UPDATE cliente SET estado='inactivo' WHERE id=?", (int(cid),))
+            run("UPDATE membresia SET estado='baja', fecha_fin=%s WHERE id=%s", (hoy.isoformat(), mid))
+            run("UPDATE cliente SET estado='inactivo' WHERE id=%s", (int(cid),))
             evento(nid, int(cid), "baja", "Baja registrada")
             st.rerun()
     elif s["membresia"] == "congelada":
         if b1.button("Reactivar"):
-            run("UPDATE membresia SET estado='activa' WHERE id=?", (mid,))
+            run("UPDATE membresia SET estado='activa' WHERE id=%s", (mid,))
             evento(nid, int(cid), "reactivacion", "Membresia reactivada")
             st.rerun()
     else:
         if b1.button("Volver a dar de alta"):
-            run("UPDATE membresia SET estado='activa', fecha_fin=NULL WHERE id=?", (mid,))
-            run("UPDATE cliente SET estado='activo' WHERE id=?", (int(cid),))
+            run("UPDATE membresia SET estado='activa', fecha_fin=NULL WHERE id=%s", (mid,))
+            run("UPDATE cliente SET estado='activo' WHERE id=%s", (int(cid),))
             evento(nid, int(cid), "reactivacion", "Vuelve a darse de alta")
             st.rerun()
 
     c1, c2, c3 = st.columns(3)
     c1.subheader("Cobros")
-    c1.dataframe(q("SELECT periodo, importe, estado, fecha, metodo FROM cobro WHERE membresia_id=? "
+    c1.dataframe(q("SELECT periodo, importe, estado, fecha, metodo FROM cobro WHERE membresia_id=%s "
                    "ORDER BY periodo DESC", (mid,)), hide_index=True, width="stretch")
     c2.subheader("Asistencia")
     c2.dataframe(q("""SELECT a.fecha, ac.nombre AS clase FROM asistencia a JOIN actividad ac
-                      ON ac.id=a.actividad_id WHERE a.cliente_id=? ORDER BY a.fecha DESC LIMIT 30""",
+                      ON ac.id=a.actividad_id WHERE a.cliente_id=%s ORDER BY a.fecha DESC LIMIT 30""",
                    (int(cid),)), hide_index=True, width="stretch")
     c3.subheader("Historial")
-    c3.dataframe(q("SELECT fecha, tipo, detalle FROM evento WHERE cliente_id=? ORDER BY fecha DESC",
+    c3.dataframe(q("SELECT fecha, tipo, detalle FROM evento WHERE cliente_id=%s ORDER BY fecha DESC",
                    (int(cid),)), hide_index=True, width="stretch")
 
+# ---------- Cobros del mes ----------
 with t4:
     pend = q("""SELECT co.id, c.nombre || ' ' || COALESCE(c.apellidos,'') AS persona, c.telefono,
                        p.nombre AS plan, co.importe
                 FROM cobro co JOIN membresia m ON m.id=co.membresia_id
                 JOIN cliente c ON c.id=m.cliente_id JOIN plan p ON p.id=m.plan_id
-                WHERE co.negocio_id=? AND co.periodo=? AND co.estado='pendiente'
+                WHERE co.negocio_id=%s AND co.periodo=%s AND co.estado='pendiente'
                 ORDER BY persona""", (nid, mes))
     st.subheader(f"Pendientes de {mes}: {len(pend)} ({pend['importe'].sum():.0f} €)")
     metodo = st.selectbox("Metodo de pago", ["Bizum", "Efectivo", "Tarjeta", "Domiciliacion", "Transferencia"])
@@ -239,20 +254,21 @@ with t4:
         a.write(f"**{r['persona']}** · {r['telefono']} · {r['plan']}")
         b.write(f"{r['importe']:.0f} €")
         if c.button("Marcar pagado", key=f"pag{r['id']}"):
-            run("UPDATE cobro SET estado='pagado', fecha=?, metodo=? WHERE id=?",
+            run("UPDATE cobro SET estado='pagado', fecha=%s, metodo=%s WHERE id=%s",
                 (hoy.isoformat(), metodo, int(r["id"])))
             st.rerun()
     st.divider()
     faltan = q("""SELECT m.id, p.importe FROM membresia m JOIN plan p ON p.id=m.plan_id
-                  WHERE m.negocio_id=? AND m.estado='activa' AND p.meses=1
-                  AND NOT EXISTS (SELECT 1 FROM cobro co WHERE co.membresia_id=m.id AND co.periodo=?)""",
+                  WHERE m.negocio_id=%s AND m.estado='activa' AND p.meses=1
+                  AND NOT EXISTS (SELECT 1 FROM cobro co WHERE co.membresia_id=m.id AND co.periodo=%s)""",
                (nid, mes))
     if len(faltan) and st.button(f"Generar cuotas de {mes} que faltan ({len(faltan)})"):
         for _, r in faltan.iterrows():
-            run("INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado) VALUES (?,?,?,?,'pendiente')",
+            run("INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado) VALUES (%s,%s,%s,%s,'pendiente')",
                 (nid, int(r["id"]), mes, float(r["importe"])))
         st.rerun()
 
+# ---------- Pruebas ----------
 with t5:
     st.caption(f"Quien viene a probar aun no es {CLI}. Si se apunta, pasa a {CLI} y conserva su historial.")
     if pruebas.empty:
@@ -263,28 +279,28 @@ with t5:
         a, b, c = st.columns([3, 1, 1])
         a.write(f"**{p['nombre']} {p['apellidos'] or ''}** · {p['telefono']} · probo el {fmt(p['ultima'])}")
         if b.button(f"Hacer {CLI}", key=f"conv{p['id']}"):
-            run("UPDATE cliente SET estado='activo', fecha_alta=? WHERE id=?", (hoy.isoformat(), int(p["id"])))
+            run("UPDATE cliente SET estado='activo', fecha_alta=%s WHERE id=%s", (hoy.isoformat(), int(p["id"])))
             mid = run("""INSERT INTO membresia (negocio_id, cliente_id, plan_id, estado, fecha_inicio)
-                         VALUES (?,?,?,'activa',?)""", (nid, int(p["id"]), int(plan_p), hoy.isoformat()))
-            run("INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado) VALUES (?,?,?,?,'pendiente')",
+                         VALUES (%s,%s,%s,'activa',%s) RETURNING id""", (nid, int(p["id"]), int(plan_p), hoy.isoformat()))
+            run("INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado) VALUES (%s,%s,%s,%s,'pendiente')",
                 (nid, mid, mes, float(planes.set_index("id").loc[plan_p, "importe"])))
             evento(nid, int(p["id"]), "alta", "Alta tras clase de prueba")
             st.rerun()
         if c.button("Descartar", key=f"desc{p['id']}"):
-            run("DELETE FROM asistencia WHERE cliente_id=?", (int(p["id"]),))
-            run("DELETE FROM cliente WHERE id=?", (int(p["id"]),))
+            run("DELETE FROM asistencia WHERE cliente_id=%s", (int(p["id"]),))
+            run("DELETE FROM cliente WHERE id=%s", (int(p["id"]),))
             st.rerun()
 
 with t6:
     dia = st.date_input("Dia", hoy, format="DD/MM/YYYY", key="dia_clases")
-    acts = q("SELECT * FROM actividad WHERE negocio_id=? ORDER BY hora", (nid,))
+    acts = q("SELECT * FROM actividad WHERE negocio_id=%s ORDER BY hora", (nid,))
     acts = acts[acts["dias"].apply(lambda x: dia.weekday() in [int(d) for d in x.split(",")])]
     if acts.empty:
         st.info("Ese dia no hay clases")
     for _, a in acts.iterrows():
         lista = q("""SELECT r.id, r.estado, c.nombre || ' ' || COALESCE(c.apellidos,'') AS persona
                      FROM reserva r JOIN cliente c ON c.id=r.cliente_id
-                     WHERE r.actividad_id=? AND r.fecha=? AND r.estado IN ('reservada','asistida')
+                     WHERE r.actividad_id=%s AND r.fecha=%s AND r.estado IN ('reservada','asistida')
                      ORDER BY persona""", (int(a["id"]), dia.isoformat()))
         vinieron = int((lista["estado"] == "asistida").sum())
         with st.expander(f"{a['hora']} · {a['nombre']} · {len(lista)}/{a['aforo']} reservas · {vinieron} asistieron"):
@@ -294,8 +310,8 @@ with t6:
                 if r["estado"] == "asistida":
                     y.success("Vino")
                 elif y.button("Ha venido", key=f"asi{r['id']}"):
-                    run("UPDATE reserva SET estado='asistida' WHERE id=?", (int(r["id"]),))
-                    rr = q("SELECT * FROM reserva WHERE id=?", (int(r["id"]),)).iloc[0]
-                    run("""INSERT OR IGNORE INTO asistencia (negocio_id, cliente_id, actividad_id, fecha)
-                           VALUES (?,?,?,?)""", (nid, int(rr["cliente_id"]), int(rr["actividad_id"]), rr["fecha"]))
+                    run("UPDATE reserva SET estado='asistida' WHERE id=%s", (int(r["id"]),))
+                    rr = q("SELECT * FROM reserva WHERE id=%s", (int(r["id"]),)).iloc[0]
+                    run("""INSERT INTO asistencia (negocio_id, cliente_id, actividad_id, fecha)
+                           VALUES (%s,%s,%s,%s) ON CONFLICT DO NOTHING""", (nid, int(rr["cliente_id"]), int(rr["actividad_id"]), rr["fecha"]))
                     st.rerun()

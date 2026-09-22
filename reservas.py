@@ -1,9 +1,8 @@
 """Vista del socio: reservar y cancelar clases desde su enlace personal."""
-import sqlite3
 from datetime import date, datetime, timedelta
 import streamlit as st
+from db import motor, q, run
 
-BD = "negocios.db"
 DIAS = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
 DIAS_ANTELACION = 7
 HORAS_CANCELAR = 2
@@ -11,67 +10,60 @@ HORAS_CANCELAR = 2
 
 def reservar(cliente, actividad_id, fecha):
     """Reserva con control de aforo. Devuelve (ok, mensaje)."""
-    c = sqlite3.connect(BD, timeout=10)
-    try:
-        c.execute("BEGIN IMMEDIATE")
-        aforo = c.execute("SELECT aforo FROM actividad WHERE id=?", (actividad_id,)).fetchone()[0]
-        ocupadas = c.execute("""SELECT COUNT(*) FROM reserva WHERE actividad_id=? AND fecha=?
-                                AND estado IN ('reservada','asistida')""", (actividad_id, fecha)).fetchone()[0]
+    with motor().begin() as c:
+        # FOR UPDATE bloquea la clase: si dos reservan a la vez, el segundo espera al primero
+        aforo = c.exec_driver_sql("SELECT aforo FROM actividad WHERE id=%s FOR UPDATE",
+                                  (actividad_id,)).scalar()
+        ocupadas = c.exec_driver_sql("""SELECT COUNT(*) FROM reserva WHERE actividad_id=%s AND fecha=%s
+                                        AND estado IN ('reservada','asistida')""", (actividad_id, fecha)).scalar()
         if ocupadas >= aforo:
-            c.rollback()
             return False, "La clase esta completa"
-        c.execute("""INSERT INTO reserva (negocio_id, cliente_id, actividad_id, fecha, estado, creada_en)
-                     VALUES (?,?,?,?,'reservada',?)
-                     ON CONFLICT (cliente_id, actividad_id, fecha)
-                     DO UPDATE SET estado='reservada', creada_en=excluded.creada_en""",
-                  (cliente["negocio_id"], cliente["id"], actividad_id, fecha, datetime.now().isoformat()))
-        c.commit()
-        return True, "Plaza reservada"
-    finally:
-        c.close()
+        c.exec_driver_sql("""INSERT INTO reserva (negocio_id, cliente_id, actividad_id, fecha, estado, creada_en)
+                             VALUES (%s,%s,%s,%s,'reservada',%s)
+                             ON CONFLICT (cliente_id, actividad_id, fecha)
+                             DO UPDATE SET estado='reservada', creada_en=EXCLUDED.creada_en""",
+                          (int(cliente["negocio_id"]), int(cliente["id"]), actividad_id, fecha,
+                           datetime.now().isoformat()))
+    return True, "Plaza reservada"
 
 
 def cancelar(cliente_id, actividad_id, fecha):
-    c = sqlite3.connect(BD, timeout=10)
-    c.execute("""UPDATE reserva SET estado='cancelada' WHERE cliente_id=? AND actividad_id=? AND fecha=?
-                 AND estado='reservada'""", (cliente_id, actividad_id, fecha))
-    c.commit()
-    c.close()
+    run("""UPDATE reserva SET estado='cancelada' WHERE cliente_id=%s AND actividad_id=%s AND fecha=%s
+           AND estado='reservada'""", (cliente_id, actividad_id, fecha))
 
 
 def vista_socio(token):
-    c = sqlite3.connect(BD)
-    c.row_factory = sqlite3.Row
-    cli = c.execute("""SELECT c.*, n.nombre AS negocio, m.estado AS membresia
-                       FROM cliente c JOIN negocio n ON n.id=c.negocio_id
-                       LEFT JOIN membresia m ON m.cliente_id=c.id
-                            AND m.id=(SELECT MAX(id) FROM membresia WHERE cliente_id=c.id)
-                       WHERE c.token=?""", (token,)).fetchone()
-    if cli is None:
+    cli = q("""SELECT c.*, n.nombre AS negocio, m.estado AS membresia
+               FROM cliente c JOIN negocio n ON n.id=c.negocio_id
+               LEFT JOIN membresia m ON m.cliente_id=c.id
+                    AND m.id=(SELECT MAX(id) FROM membresia WHERE cliente_id=c.id)
+               WHERE c.token=%s""", (token,))
+    if cli.empty:
         st.error("Este enlace no es valido. Pide uno nuevo en recepcion.")
         return
+    cli = cli.iloc[0]
     st.title(cli["negocio"])
     st.write(f"Hola, **{cli['nombre']}**")
     if cli["membresia"] != "activa":
         st.warning("Tu membresia no esta activa, asi que no puedes reservar. Habla con recepcion.")
         return
 
-    acts = c.execute("SELECT * FROM actividad WHERE negocio_id=? ORDER BY hora", (cli["negocio_id"],)).fetchall()
-    mias = {(r["actividad_id"], r["fecha"]) for r in c.execute(
-        "SELECT actividad_id, fecha FROM reserva WHERE cliente_id=? AND estado='reservada'", (cli["id"],))}
-    ocup = {(r[0], r[1]): r[2] for r in c.execute(
-        """SELECT actividad_id, fecha, COUNT(*) FROM reserva WHERE negocio_id=?
-           AND estado IN ('reservada','asistida') GROUP BY actividad_id, fecha""", (cli["negocio_id"],))}
-    c.close()
+    nid, cid = int(cli["negocio_id"]), int(cli["id"])
+    acts = q("SELECT * FROM actividad WHERE negocio_id=%s ORDER BY hora", (nid,)).to_dict("records")
+    mias = {(int(r["actividad_id"]), r["fecha"]) for r in q(
+        "SELECT actividad_id, fecha FROM reserva WHERE cliente_id=%s AND estado='reservada'", (cid,)
+    ).to_dict("records")}
+    ocup = {(int(r["actividad_id"]), r["fecha"]): int(r["n"]) for r in q(
+        """SELECT actividad_id, fecha, COUNT(*) AS n FROM reserva WHERE negocio_id=%s
+           AND estado IN ('reservada','asistida') GROUP BY actividad_id, fecha""", (nid,)
+    ).to_dict("records")}
 
     ahora = datetime.now()
-    proximas = [(a, f) for (a, f) in sorted(mias, key=lambda x: x[1])]
-    if proximas:
+    nombres = {a["id"]: a for a in acts}
+    futuras = sorted([(a, f) for (a, f) in mias if f >= date.today().isoformat()], key=lambda x: x[1])
+    if futuras:
         st.subheader("Tus reservas")
-        nombres = {a["id"]: a for a in acts}
-        for aid, f in proximas:
-            if f < date.today().isoformat():
-                continue
+        for aid, f in futuras:
             a = nombres[aid]
             col1, col2 = st.columns([3, 1])
             d = date.fromisoformat(f)
@@ -79,7 +71,7 @@ def vista_socio(token):
             inicio = datetime.fromisoformat(f"{f}T{a['hora']}")
             if inicio - ahora > timedelta(hours=HORAS_CANCELAR):
                 if col2.button("Cancelar", key=f"can{aid}{f}"):
-                    cancelar(cli["id"], aid, f)
+                    cancelar(cid, aid, f)
                     st.rerun()
             else:
                 col2.caption("Ya no se puede cancelar")
