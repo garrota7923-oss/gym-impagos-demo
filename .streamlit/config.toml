@@ -1,0 +1,20 @@
+[server]
+enableStaticServing = true
+
+[theme]
+base = "light"
+primaryColor = "#1F3FA6"
+backgroundColor = "#F6F7F9"
+secondaryBackgroundColor = "#E9EDF3"
+textColor = "#16213A"
+headingFont = "Barlow Semi Condensed:https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+baseRadius = "0.6rem"
+borderColor = "#D5DBE5"
+showWidgetBorder = true
+
+[theme.sidebar]
+backgroundColor = "#16213A"
+textColor = "#E8ECF4"
+secondaryBackgroundColor = "#22305A"
+borderColor = "#2C3B66"
