@@ -119,7 +119,8 @@ def cargar(nid):
             return "Riesgo de baja"
         return "Al dia"
 
-    socios = clientes[clientes["estado"] != "prueba"].copy()
+    borrados = clientes["telefono"].astype(str).str.startswith("borrado-")
+    socios = clientes[(clientes["estado"] != "prueba") & ~borrados].copy()
     socios["situacion"] = socios.apply(situacion, axis=1) if len(socios) else []
     pruebas = clientes[clientes["estado"] == "prueba"].copy()
     cli = cfg.get("cliente", "cliente")

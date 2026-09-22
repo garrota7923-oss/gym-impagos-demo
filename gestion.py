@@ -12,6 +12,7 @@ if "t" in st.query_params:
 
 from comun import estilo
 import paginas
+from editar import editar
 
 st.logo("static/logo.svg", icon_image="static/icono.svg", size="large")
 
@@ -57,6 +58,9 @@ nav = st.navigation({
         st.Page(paginas.cobros, title="Cobros", icon=":material/payments:", url_path="cobros"),
         st.Page(paginas.pruebas, title="Pruebas", icon=":material/waving_hand:", url_path="pruebas"),
     ],
-    "Configuracion": [st.Page(paginas.ajustes, title="Ajustes", icon=":material/settings:", url_path="ajustes")],
+    "Configuracion": [
+        st.Page(editar, title="Editar datos", icon=":material/table_edit:", url_path="editar"),
+        st.Page(paginas.ajustes, title="Ajustes", icon=":material/settings:", url_path="ajustes"),
+    ],
 })
 nav.run()
