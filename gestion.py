@@ -1,5 +1,6 @@
 import json
 import re
+import secrets
 import sqlite3
 from datetime import date, timedelta
 import pandas as pd
@@ -7,6 +8,11 @@ import streamlit as st
 
 BD = "negocios.db"
 st.set_page_config(page_title="Gestion de membresias", layout="wide")
+
+if "t" in st.query_params:
+    from reservas import vista_socio
+    vista_socio(st.query_params["t"])
+    st.stop()
 
 
 def q(sql, p=()):
@@ -88,7 +94,8 @@ k3.metric("Pendientes de pago", int((socios["situacion"] == "Pendiente de pago")
 k4.metric("Riesgo de baja (+14 dias)", int((socios["situacion"] == "Riesgo de baja").sum()))
 k5.metric("Clases de prueba", len(pruebas))
 
-t1, t2, t3, t4, t5 = st.tabs([CLIS.capitalize(), f"Alta de {CLI}", "Ficha", "Cobros del mes", "Pruebas"])
+t1, t2, t3, t4, t5, t6 = st.tabs([CLIS.capitalize(), f"Alta de {CLI}", "Ficha", "Cobros del mes",
+                                   "Pruebas", "Clases de hoy"])
 
 with t1:
     ORDEN = ["Pendiente de pago", "Riesgo de baja", "Al dia", "Congelado", "Baja"]
@@ -132,9 +139,9 @@ with t2:
                 st.error(f"Ese telefono ya es de {e['nombre']} (nº {e['id']}, estado {e['estado']})")
             else:
                 cid = run("""INSERT INTO cliente (negocio_id, nombre, apellidos, telefono, email, dni,
-                             estado, fecha_alta) VALUES (?,?,?,?,?,?,'activo',?)""",
+                             estado, fecha_alta, token) VALUES (?,?,?,?,?,?,'activo',?,?)""",
                           (nid, nombre.strip(), apellidos.strip() or None, t, email.strip() or None,
-                           dni.strip().upper() or None, hoy.isoformat()))
+                           dni.strip().upper() or None, hoy.isoformat(), secrets.token_urlsafe(8)))
                 mid = run("""INSERT INTO membresia (negocio_id, cliente_id, plan_id, estado, fecha_inicio)
                              VALUES (?,?,?,'activa',?)""", (nid, cid, int(plan), hoy.isoformat()))
                 run("""INSERT INTO cobro (negocio_id, membresia_id, periodo, importe, estado)
@@ -156,6 +163,11 @@ with t3:
     m3.metric("Ultima clase", fmt(s["ultima"]))
     m4.metric(f"{CLI.capitalize()} desde", fmt(s["fecha_alta"]))
 
+    host = st.context.headers.get("host", "localhost:8501")
+    base = ("http://" if host.startswith(("localhost", "127.", "192.168.")) else "https://") + host
+    if s.get("token"):
+        st.text_input("Enlace personal para reservar (envialo por WhatsApp o email)",
+                      f"{base}/?t={s['token']}", disabled=False)
     with st.expander("Editar datos"):
         with st.form("editar"):
             a, b = st.columns(2)
@@ -262,3 +274,28 @@ with t5:
             run("DELETE FROM asistencia WHERE cliente_id=?", (int(p["id"]),))
             run("DELETE FROM cliente WHERE id=?", (int(p["id"]),))
             st.rerun()
+
+with t6:
+    dia = st.date_input("Dia", hoy, format="DD/MM/YYYY", key="dia_clases")
+    acts = q("SELECT * FROM actividad WHERE negocio_id=? ORDER BY hora", (nid,))
+    acts = acts[acts["dias"].apply(lambda x: dia.weekday() in [int(d) for d in x.split(",")])]
+    if acts.empty:
+        st.info("Ese dia no hay clases")
+    for _, a in acts.iterrows():
+        lista = q("""SELECT r.id, r.estado, c.nombre || ' ' || COALESCE(c.apellidos,'') AS persona
+                     FROM reserva r JOIN cliente c ON c.id=r.cliente_id
+                     WHERE r.actividad_id=? AND r.fecha=? AND r.estado IN ('reservada','asistida')
+                     ORDER BY persona""", (int(a["id"]), dia.isoformat()))
+        vinieron = int((lista["estado"] == "asistida").sum())
+        with st.expander(f"{a['hora']} · {a['nombre']} · {len(lista)}/{a['aforo']} reservas · {vinieron} asistieron"):
+            for _, r in lista.iterrows():
+                x, y = st.columns([3, 1])
+                x.write(r["persona"])
+                if r["estado"] == "asistida":
+                    y.success("Vino")
+                elif y.button("Ha venido", key=f"asi{r['id']}"):
+                    run("UPDATE reserva SET estado='asistida' WHERE id=?", (int(r["id"]),))
+                    rr = q("SELECT * FROM reserva WHERE id=?", (int(r["id"]),)).iloc[0]
+                    run("""INSERT OR IGNORE INTO asistencia (negocio_id, cliente_id, actividad_id, fecha)
+                           VALUES (?,?,?,?)""", (nid, int(rr["cliente_id"]), int(rr["actividad_id"]), rr["fecha"]))
+                    st.rerun()
