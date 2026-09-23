@@ -3,3 +3,4 @@ HORARIOS*
 *FÁBRIKA*
 __pycache__/
 .streamlit/secrets.toml
+datos/generados/
