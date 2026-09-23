@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./negocios.db)",
+      "Read(./.streamlit/secrets.toml)",
+      "Read(./static/**)",
+      "Bash(git push:*)",
+      "Bash(python migrar_a_supabase.py:*)",
+      "Bash(python actualizar_bd.py:*)",
+      "Bash(python crear_usuario.py:*)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(pip install:*)",
+      "Bash(rm:*)"
+    ]
+  }
+}

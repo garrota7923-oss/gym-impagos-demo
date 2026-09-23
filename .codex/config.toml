@@ -1,0 +1,11 @@
+# Configuración de Codex para este proyecto (ahorro de cuota)
+# Si algún valor da error en tu versión de Codex, borra esa línea.
+
+model_reasoning_effort = "medium"     # "low" para cosas simples, "high" solo para bugs difíciles
+model_verbosity = "low"               # respuestas cortas
+tool_output_token_limit = 8000        # no tragarse archivos gigantes de golpe
+model_auto_compact_token_limit = 60000  # resume la conversación antes de que engorde
+
+# Pide permiso antes de ejecutar comandos o salir de la carpeta
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
