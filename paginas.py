@@ -342,9 +342,14 @@ def cobros():
     mes = q("""SELECT COUNT(*) AS n, COALESCE(SUM(importe), 0) AS t FROM cobro
                WHERE negocio_id=%s AND estado='pendiente' AND periodo LIKE %s""", (c["nid"], c["mes"] + "%")).iloc[0]
     sin_generar = faltan["importe"].sum() if len(faltan) else 0
+    atras = q("""SELECT COUNT(*) AS n, COALESCE(SUM(importe), 0) AS t FROM cobro
+                 WHERE negocio_id=%s AND estado='pendiente' AND LEFT(periodo,7) < %s""", (c["nid"], c["mes"])).iloc[0]
     nota = f"{int(mes['n'])} cobros pendientes" + (f" · incluye {euros(sin_generar)} sin generar" if sin_generar else "")
-    st.metric(f"Pendiente de {nombre_mes(c['mes'])}", euros(float(mes["t"]) + float(sin_generar)), border=True)
-    st.caption(nota)
+    izq, der = st.columns(2)
+    izq.metric(f"Pendiente de {nombre_mes(c['mes'])}", euros(float(mes["t"]) + float(sin_generar)), border=True)
+    izq.caption(nota)
+    der.metric("Atrasado", euros(float(atras["t"])), border=True)
+    der.caption(f"{int(atras['n'])} cobros de meses anteriores")
     if len(faltan):
         with st.container(border=True):
             st.markdown(f"**Faltan por generar {len(faltan)} cuotas de {nombre_mes(c['mes'])}** "

@@ -4,7 +4,8 @@ Claude y Codex: leed esto al empezar y actualizadlo al acabar. Borrad lo viejo; 
 
 ## Ahora mismo
 - App v2 en Streamlit Cloud con Supabase: login, socios, cobros, clases, reservas del socio, pruebas y edición de tablas.
-- Cobros: indicador arriba con el total pendiente del mes actual (cobros pendientes + cuotas sin generar). Sin commit; falta probar en la app y /codex:review.
+- Cobros: dos recuadros arriba, "Pendiente de <mes>" (incluye cuotas sin generar) y "Atrasado" (pendientes de meses anteriores). Ya en main el primero.
+- A1 hecha (TAREAS.md) en paginas.py `cobros()`. Sin commit; falta probar en la app y /codex:review.
 
 ## Siguiente tarea
 - (Diego la escribe aquí)
