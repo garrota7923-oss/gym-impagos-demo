@@ -5,6 +5,7 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 from db import q, run, clave_ok, hash_clave
+from demo import es_demo, reiniciar
 from comun import (cargar, cuotas_debidas, evento, tel_ok, tel_norm, fmt, euros, nombre_mes, dias_texto,
                    dias_desde_texto, enlace_socio, whatsapp, estilo, ORDEN, DIAS, LETRAS)
 
@@ -632,6 +633,20 @@ def ajustes():
                         xl, sheet_name=t, index=False)
             st.download_button("Descargar Excel", buf.getvalue(), file_name=f"datos_{date.today()}.xlsx",
                                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary")
+        if es_demo(st.session_state["usuario"].get("email")):
+            st.divider()
+            st.subheader("Dejar la demo como nueva")
+            st.caption("Solo cuentas de demo. Borra todos los datos de este negocio y vuelve a crear los inventados.")
+            with st.form("demo"):
+                conf = st.text_input(f"Escribe el nombre del negocio para confirmar: {c['negocio']['nombre']}")
+                if st.form_submit_button("Dejar la demo como nueva"):
+                    if conf.strip().lower() != c["negocio"]["nombre"].strip().lower():
+                        st.error("El nombre no coincide. No se ha borrado nada.")
+                    else:
+                        with st.spinner("Creando datos nuevos..."):
+                            reiniciar(nid, c["negocio"]["tipo"], st.session_state["usuario"].get("email"))
+                        st.session_state.pop("recordar_todos", None)
+                        st.success("Demo como nueva.")
         st.divider()
         st.subheader("Dar de baja el servicio")
         st.caption("Tu panel y los enlaces de reserva de tus " + c["CLIS"] + " dejaran de funcionar. "

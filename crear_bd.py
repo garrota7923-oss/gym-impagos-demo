@@ -122,6 +122,11 @@ def meses_entre(inicio, fin):
 def crear_negocio(c, nombre, tipo, config, planes, actividades, n_clientes):
     nid = c.execute("INSERT INTO negocio (nombre, tipo, config, fecha_alta) VALUES (?,?,?,?)",
                     (nombre, tipo, config, HOY.isoformat())).lastrowid
+    return rellenar(c, nid, planes, actividades, n_clientes)
+
+
+def rellenar(c, nid, planes, actividades, n_clientes):
+    """Crea planes, clases, socios, cobros y asistencias inventados en el negocio nid."""
     plan_ids = [c.execute("""INSERT INTO plan (negocio_id, nombre, tipo, importe, meses, sesiones)
                              VALUES (?,?,?,?,?,?)""", (nid, *p)).lastrowid for p in planes]
     act_ids = [c.execute("""INSERT INTO actividad (negocio_id, nombre, dias, hora, duracion_min, aforo)
@@ -199,25 +204,29 @@ def crear_negocio(c, nombre, tipo, config, planes, actividades, n_clientes):
     return nid
 
 
+HORAS = ["09:30", "10:45", "12:00", "16:00", "17:15", "18:30", "19:45", "21:00"]
+DEMOS = {  # tipo de negocio -> (nombre, config, planes, actividades, n_clientes)
+    "gimnasio": ("Club de Boxeo (demo)", '{"cliente": "socio", "actividad": "clase"}',
+                 [("Cuota mensual", "recurrente", 65.0, 1, None),
+                  ("Cuota trimestral", "recurrente", 180.0, 3, None)],
+                 [(f"Boxeo {h}", "0,1,2,3,4", h, 60, 14) for h in HORAS],
+                 55),
+    "academia": ("Academia de Ingles (demo)", '{"cliente": "alumno", "actividad": "grupo"}',
+                 [("Mensualidad 2 dias", "recurrente", 70.0, 1, None),
+                  ("Mensualidad intensivo", "recurrente", 110.0, 1, None)],
+                 [("Ingles A2", "0,2", "17:00", 90, 10),
+                  ("Ingles B1", "0,2", "18:30", 90, 10),
+                  ("Ingles B2", "1,3", "18:30", 90, 10),
+                  ("Conversacion C1", "4", "19:00", 60, 8)],
+                 35),
+}
+
+
 def main():
     c = sqlite3.connect(BD)
     c.executescript(ESQUEMA)
-    horas = ["09:30", "10:45", "12:00", "16:00", "17:15", "18:30", "19:45", "21:00"]
-    crear_negocio(c, "Club de Boxeo (demo)", "gimnasio",
-                  '{"cliente": "socio", "actividad": "clase"}',
-                  [("Cuota mensual", "recurrente", 65.0, 1, None),
-                   ("Cuota trimestral", "recurrente", 180.0, 3, None)],
-                  [(f"Boxeo {h}", "0,1,2,3,4", h, 60, 14) for h in horas],
-                  55)
-    crear_negocio(c, "Academia de Ingles (demo)", "academia",
-                  '{"cliente": "alumno", "actividad": "grupo"}',
-                  [("Mensualidad 2 dias", "recurrente", 70.0, 1, None),
-                   ("Mensualidad intensivo", "recurrente", 110.0, 1, None)],
-                  [("Ingles A2", "0,2", "17:00", 90, 10),
-                   ("Ingles B1", "0,2", "18:30", 90, 10),
-                   ("Ingles B2", "1,3", "18:30", 90, 10),
-                   ("Conversacion C1", "4", "19:00", 60, 8)],
-                  35)
+    for tipo, (nombre, config, planes, actividades, n) in DEMOS.items():
+        crear_negocio(c, nombre, tipo, config, planes, actividades, n)
     c.commit()
     for n, t in c.execute("SELECT id, nombre FROM negocio"):
         cli = c.execute("SELECT COUNT(*) FROM cliente WHERE negocio_id=? AND estado!='prueba'", (n,)).fetchone()[0]
