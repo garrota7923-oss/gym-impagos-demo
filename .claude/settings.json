@@ -4,13 +4,15 @@
       "Read(./negocios.db)",
       "Read(./.streamlit/secrets.toml)",
       "Read(./static/**)",
-      "Bash(git push:*)",
+      "Bash(git push origin main:*)",
+      "Bash(git push -u origin main:*)",
+      "Bash(git push origin HEAD:main:*)",
+      "Bash(gh pr merge:*)",
       "Bash(python migrar_a_supabase.py:*)",
       "Bash(python actualizar_bd.py:*)",
       "Bash(python crear_usuario.py:*)"
     ],
     "ask": [
-      "Bash(git commit:*)",
       "Bash(pip install:*)",
       "Bash(rm:*)"
     ]
