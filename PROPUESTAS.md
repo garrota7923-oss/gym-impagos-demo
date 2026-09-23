@@ -13,6 +13,11 @@ Esto es orientacion, no asesoria legal: antes del primer cliente real, que lo re
 - **P3. Justificante de pago (M).** Un texto para enviar por WhatsApp al cobrar ("Recibido 40 EUR, cuota de septiembre").
   Gratis: si (enlace wa.me, como ahora). Legal: **no puede llamarse "factura"** ni parecerlo; en Espana las facturas tienen requisitos propios (y Verifactu). Poner "Justificante, no es factura".
 
+- **P10. Recordatorio registrado al abrir WhatsApp (S, P2 de Codex en A2).** Ahora el `evento` se apunta al pulsar "Recordar a todos", tambien para socios sin telefono valido. Opcion A: no apuntarlo sin telefono valido. Opcion B: boton "Enviado" por socio.
+
+## Demo
+- **P11. Reset de la demo mas rapido (S).** "Dejar la demo como nueva" hace unas 2.000 inserciones una a una en Supabase; si tarda mucho, agruparlas (executemany). Medirlo antes.
+
 ## Seguridad (tocar solo con OK de Diego)
 - **P4. Revision automatica de `negocio_id` (S).** Un script que avise si alguna consulta de `q()`/`run()` no lleva `negocio_id`. Cubre el punto del checklist "Antes del primer cliente real".
   Gratis: si (solo Python). Legal: ayuda al RGPD (que un club no vea datos de otro).
