@@ -3,19 +3,18 @@
 Claude y Codex: leed esto al empezar y actualizadlo al acabar. Borrad lo viejo; esto no es un historial.
 
 ## Ahora mismo
-- App v2 en Streamlit Cloud con Supabase: login, socios, cobros, clases, reservas del socio, pruebas y edición de tablas.
-- Cobros: dos recuadros arriba, "Pendiente de <mes>" (incluye cuotas sin generar) y "Atrasado" (pendientes de meses anteriores).
-- A1 hecha, revisada por Codex y en main (PR #2). Falta que Diego la pruebe en la app.
-- A2 hecha en rama `recordar-atrasados` (paginas.py `cobros()`): recuadro "Recordar a todos" con WhatsApp por socio atrasado y un `evento` 'recordatorio' por socio. PR #4 abierto, revisado por Codex (sin P0/P1). Maximo un recordatorio por socio y dia.
-- Pendiente A2 (P2 de Codex): el evento se registra al pulsar el boton, no al abrir cada WhatsApp (incluye socios sin telefono valido).
+- App v2 en Streamlit Cloud con Supabase: login, socios, cobros (pendiente del mes, atrasados, "Recordar a todos"), clases, reservas del socio, pruebas y edicion de tablas.
+- Fase A terminada (A1, A2, A3; ver HECHO.md). Siguiente: FASE B (B1, generador de Excels sinteticos).
+- A3: Ajustes > "Datos y baja" > "Dejar la demo como nueva" (`demo.py`). Tres candados: email en `DEMO_EMAILS` (secrets), `negocio_id` en `DEMO_NEGOCIOS={1}` (fijado en codigo) y el usuario pertenece a ese negocio. Inserciones por lotes (~3 s). Probado contra Supabase: negocio 2 identico. Falta `DEMO_EMAILS` en Streamlit Cloud.
 
 ## Siguiente tarea
 - (Diego la escribe aquí)
 
 ## Decisiones tomadas
+- Ante opciones, siempre la mas segura (p. ej. demo solo por lista explicita de emails).
 - Solo negocios con cuota recurrente (no peluquerías ni pago suelto).
 - Stack 100% gratis. Solo datos inventados.
-- IA: nada de entrenar modelos propios por ahora; primero API barata con JSON + reglas.
+- IA: modelo propio pequeno (RandomForest) para leer Excels de horarios + Gemini solo de respaldo (FASE B).
 
 ## Pendiente de que Diego decida
 - (vacío)

@@ -11,8 +11,7 @@ Objetivo: que la demo convenza a un club en 5 minutos. Primero lo que ayuda a ve
 
 ## FASE A — Lo que falta para vender (sin IA)
 
-- [ ] **A3. Datos demo siempre frescos.** Script o botón (solo para el usuario demo) que regenere los datos inventados, para que la demo no se quede vieja ni rota tras enseñarla. Pregunta a Diego antes de tocar Supabase.
-  Hecho cuando: tras "trastear" en una demo, un clic la deja como nueva.
+(Fase A terminada: ver HECHO.md)
 
 ---
 
