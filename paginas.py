@@ -373,7 +373,11 @@ def cobros():
                        f"({euros(atrasados['importe'].sum())})")
             if b.button("Recordar a todos", width="stretch"):
                 st.session_state["recordar_todos"] = True
+                hechos = set(q("""SELECT cliente_id FROM evento WHERE negocio_id=%s AND tipo='recordatorio'
+                                  AND fecha=%s""", (c["nid"], date.today().isoformat()))["cliente_id"])
                 for cid, g in atrasados.groupby("cid", sort=False):
+                    if int(cid) in hechos:
+                        continue
                     evento(c["nid"], int(cid), "recordatorio",
                            f"Recordatorio de {len(g)} cuotas atrasadas ({euros(g['importe'].sum())})")
             if st.session_state.get("recordar_todos"):
