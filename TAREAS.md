@@ -14,7 +14,7 @@ Objetivo: que la demo convenza a un club en 5 minutos. Primero lo que ayuda a ve
 - [x] **A1. Atrasados en Cobros.** Divide el indicador actual en dos recuadros lado a lado: "Pendiente este mes" (el de ahora) y "Atrasado" (pendientes de meses anteriores: importe y número de cobros). Mismo estilo y misma consulta segura por `negocio_id`.
   Hecho cuando: los dos números suman el total de "Pendientes de pago" de la lista.
 
-- [ ] **A2. Recordar a todos los atrasados.** En Cobros, un botón "Recordar a todos" que muestre la lista de atrasados, cada uno con su enlace de WhatsApp (reutiliza `whatsapp()` de comun.py) y un mensaje educado ya escrito. Sin API de WhatsApp: el gerente pulsa cada enlace. Registrar un `evento` por cada recordatorio.
+- [x] **A2. Recordar a todos los atrasados.** En Cobros, un botón "Recordar a todos" que muestre la lista de atrasados, cada uno con su enlace de WhatsApp (reutiliza `whatsapp()` de comun.py) y un mensaje educado ya escrito. Sin API de WhatsApp: el gerente pulsa cada enlace. Registrar un `evento` por cada recordatorio.
   Hecho cuando: con 3 clics el gerente tiene abiertos los WhatsApp de los que deben.
 
 - [ ] **A3. Datos demo siempre frescos.** Script o botón (solo para el usuario demo) que regenere los datos inventados, para que la demo no se quede vieja ni rota tras enseñarla. Pregunta a Diego antes de tocar Supabase.

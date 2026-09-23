@@ -365,6 +365,34 @@ def cobros():
                 FROM cobro co JOIN membresia m ON m.id=co.membresia_id
                 JOIN cliente c ON c.id=m.cliente_id JOIN plan p ON p.id=m.plan_id
                 WHERE co.negocio_id=%s AND co.estado='pendiente' ORDER BY co.periodo, c.nombre""", (c["nid"],))
+    atrasados = pend[pend["periodo"].str[:7] < c["mes"]] if len(pend) else pend
+    if len(atrasados):
+        with st.container(border=True):
+            a, b = st.columns([3, 1])
+            a.markdown(f"**{atrasados['cid'].nunique()} socios con cuotas atrasadas** "
+                       f"({euros(atrasados['importe'].sum())})")
+            if b.button("Recordar a todos", width="stretch"):
+                st.session_state["recordar_todos"] = True
+                for cid, g in atrasados.groupby("cid", sort=False):
+                    evento(c["nid"], int(cid), "recordatorio",
+                           f"Recordatorio de {len(g)} cuotas atrasadas ({euros(g['importe'].sum())})")
+            if st.session_state.get("recordar_todos"):
+                st.caption("Pulsa cada enlace para abrir su WhatsApp con el mensaje ya escrito.")
+                for cid, g in atrasados.groupby("cid", sort=False):
+                    r = g.iloc[0]
+                    meses = ", ".join(nombre_mes(p) for p in g["periodo"])
+                    a, b = st.columns([3, 1])
+                    a.markdown(f"{nombre_completo(r)} · :gray[{meses}] · **{euros(g['importe'].sum())}**")
+                    if tel_ok(r["telefono"]):
+                        b.link_button("WhatsApp", whatsapp(r["telefono"], f"Hola {r['nombre']}, esperamos que estes "
+                                      f"bien. Te recordamos que tienes pendiente la cuota de {meses} "
+                                      f"({euros(g['importe'].sum())}). Si ya la has pagado, ignora este mensaje. "
+                                      f"Gracias."), width="stretch")
+                    else:
+                        b.caption("Sin telefono valido")
+                if st.button("Cerrar lista"):
+                    st.session_state["recordar_todos"] = False
+                    st.rerun()
     st.subheader(f"Pendientes de pago: {len(pend)} ({euros(pend['importe'].sum() if len(pend) else 0)})")
     if pend.empty:
         st.success("No hay nada pendiente de cobrar.")

@@ -4,8 +4,10 @@ Claude y Codex: leed esto al empezar y actualizadlo al acabar. Borrad lo viejo; 
 
 ## Ahora mismo
 - App v2 en Streamlit Cloud con Supabase: login, socios, cobros, clases, reservas del socio, pruebas y edición de tablas.
-- Cobros: dos recuadros arriba, "Pendiente de <mes>" (incluye cuotas sin generar) y "Atrasado" (pendientes de meses anteriores). Ya en main el primero.
-- A1 hecha (TAREAS.md) en paginas.py `cobros()`. Sin commit; falta probar en la app y /codex:review.
+- Cobros: dos recuadros arriba, "Pendiente de <mes>" (incluye cuotas sin generar) y "Atrasado" (pendientes de meses anteriores).
+- A1 hecha, revisada por Codex y en main (PR #2). Falta que Diego la pruebe en la app.
+- A2 hecha en rama `recordar-atrasados` (paginas.py `cobros()`): recuadro "Recordar a todos" con WhatsApp por socio atrasado y un `evento` 'recordatorio' por socio. PR abierto. Codex NO la reviso (falta `codex login`, error 401).
+- Nota A2: pulsar "Recordar a todos" dos veces registra dos eventos por socio.
 
 ## Siguiente tarea
 - (Diego la escribe aquí)
