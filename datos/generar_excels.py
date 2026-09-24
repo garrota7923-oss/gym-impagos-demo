@@ -1,6 +1,7 @@
 """Genera Excels inventados tipo horario de club, con su etiqueta correcta por celda (para entrenar B2).
 Solo datos inventados. Semilla fija: siempre salen los mismos datos.
-Uso: python datos/generar_excels.py  ->  datos/generados/ (excels/*.xlsx, etiquetas.csv, reservas.csv)"""
+Uso: python datos/generar_excels.py  ->  datos/generados/ (excels/*.xlsx, etiquetas.csv, reservas.csv, familias.csv)
+familias.csv: el estilo de club (0-29) de cada Excel, para examinar el modelo con formatos que no ha visto (B2b)."""
 import calendar
 import csv
 import random
@@ -118,14 +119,16 @@ def hoja(r, e, ws, anio, mes, nombre_archivo, etiquetas, reservas):
 def main():
     r = random.Random(SEMILLA)
     (SALIDA / "excels").mkdir(parents=True, exist_ok=True)
-    etiquetas, reservas = [], []
+    etiquetas, reservas, familias = [], [], []
     clubs = [estilo(r) for _ in range(30)]
     for n in range(N_EXCELS):
-        e = dict(r.choice(clubs))
+        base = r.choice(clubs)
+        e = dict(base)
         if r.random() < 0.2:                                     # a veces el club cambia algo de su formato
             e.update({k: v for k, v in estilo(r).items() if r.random() < 0.3})
         anio, mes = r.choice([2024, 2025, 2026]), r.randint(1, 12)
         nombre_archivo = f"horario_{n:03d}.xlsx"
+        familias.append([nombre_archivo, next(i for i, c in enumerate(clubs) if c is base)])
         wb = Workbook()
         wb.properties.created = datetime(2026, 1, 1)
         wb.remove(wb.active)
@@ -138,7 +141,8 @@ def main():
             wb.create_sheet(r.choice(["Hoja1", "RESUMEN", "Notas"]))
         wb.save(SALIDA / "excels" / nombre_archivo)
     for archivo, cab, filas in [("etiquetas.csv", ["archivo", "hoja", "fila", "col", "valor", "etiqueta"], etiquetas),
-                                ("reservas.csv", ["archivo", "fecha", "hora", "nombre", "prueba"], reservas)]:
+                                ("reservas.csv", ["archivo", "fecha", "hora", "nombre", "prueba"], reservas),
+                                ("familias.csv", ["archivo", "familia"], familias)]:
         with open(SALIDA / archivo, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows([cab] + filas)
     print(f"{N_EXCELS} Excels, {len(etiquetas)} celdas etiquetadas, {len(reservas)} reservas -> {SALIDA}")

@@ -7,3 +7,4 @@
 - 2026-09-24 · A5. Proteger la demo · PR #9
 - 2026-09-24 · B1. Generador de Excels sinteticos · PR #10
 - 2026-09-24 · B2. Modelo de celdas (RandomForest) · PR #11
+- 2026-09-24 · B2b (parte 1). Examen dejando fuera cada familia de formato: 99,99% · PR #12
