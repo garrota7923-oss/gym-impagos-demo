@@ -526,6 +526,8 @@ def ajustes():
     nid = c["nid"]
     st.title("Ajustes")
     t1, t2, t3, t4, t5 = st.tabs(["Clases y horarios", "Planes y precios", "Mi negocio", "Mi cuenta", "Datos y baja"])
+    # Cuentas de demo: sin cambiar contrasena ni dar de baja, para que la demo no se rompa
+    demo = es_demo(st.session_state["usuario"].get("email"))
 
     with t1:
         st.caption("Edita directamente en la tabla. Dias: L M X J V S D separados por espacios. "
@@ -608,19 +610,22 @@ def ajustes():
     with t4:
         u = st.session_state["usuario"]
         st.write(f"Entras como **{u['email']}**")
-        with st.form("clave", clear_on_submit=True):
-            actual = st.text_input("Contrasena actual", type="password")
-            nueva = st.text_input("Contrasena nueva (minimo 8 caracteres)", type="password")
-            repite = st.text_input("Repite la nueva", type="password")
-            if st.form_submit_button("Cambiar contrasena", type="primary"):
-                guardada = q("SELECT clave FROM usuario WHERE id=%s", (int(u["id"]),)).iloc[0]["clave"]
-                if not clave_ok(actual, guardada):
-                    st.error("La contrasena actual no es correcta")
-                elif len(nueva) < 8 or nueva != repite:
-                    st.error("La nueva debe tener 8 caracteres o mas y coincidir en los dos campos")
-                else:
-                    run("UPDATE usuario SET clave=%s WHERE id=%s", (hash_clave(nueva), int(u["id"])))
-                    st.success("Contrasena cambiada")
+        if demo:
+            st.caption("Cuenta de demo: la contrasena no se puede cambiar.")
+        else:
+            with st.form("clave", clear_on_submit=True):
+                actual = st.text_input("Contrasena actual", type="password")
+                nueva = st.text_input("Contrasena nueva (minimo 8 caracteres)", type="password")
+                repite = st.text_input("Repite la nueva", type="password")
+                if st.form_submit_button("Cambiar contrasena", type="primary"):
+                    guardada = q("SELECT clave FROM usuario WHERE id=%s", (int(u["id"]),)).iloc[0]["clave"]
+                    if not clave_ok(actual, guardada):
+                        st.error("La contrasena actual no es correcta")
+                    elif len(nueva) < 8 or nueva != repite:
+                        st.error("La nueva debe tener 8 caracteres o mas y coincidir en los dos campos")
+                    else:
+                        run("UPDATE usuario SET clave=%s WHERE id=%s", (hash_clave(nueva), int(u["id"])))
+                        st.success("Contrasena cambiada")
 
     with t5:
         st.subheader("Descargar todos tus datos")
@@ -634,7 +639,7 @@ def ajustes():
                         xl, sheet_name=t, index=False)
             st.download_button("Descargar Excel", buf.getvalue(), file_name=f"datos_{date.today()}.xlsx",
                                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", type="primary")
-        if es_demo(st.session_state["usuario"].get("email")):
+        if demo:
             st.divider()
             st.subheader("Dejar la demo como nueva")
             st.caption("Solo cuentas de demo. Borra todos los datos de este negocio y vuelve a crear los inventados.")
@@ -650,18 +655,21 @@ def ajustes():
                         st.session_state.pop("recordar_todos", None)
                         st.success(f"Demo como nueva en {time.perf_counter() - t0:.1f} s.")
         st.divider()
-        st.subheader("Dar de baja el servicio")
-        st.caption("Tu panel y los enlaces de reserva de tus " + c["CLIS"] + " dejaran de funcionar. "
-                   "Descarga antes tus datos. Si cambias de opinion en los proximos 30 dias, escribenos y "
-                   "reactivamos la cuenta; despues se borran.")
-        with st.form("baja"):
-            conf = st.text_input(f"Escribe el nombre del negocio para confirmar: {c['negocio']['nombre']}")
-            if st.form_submit_button("Dar de baja mi negocio"):
-                if conf.strip().lower() != c["negocio"]["nombre"].strip().lower():
-                    st.error("El nombre no coincide. No se ha dado de baja nada.")
-                else:
-                    run("UPDATE negocio SET activo=FALSE, fecha_baja=%s WHERE id=%s", (date.today().isoformat(), nid))
-                    run("UPDATE usuario SET activo=FALSE WHERE negocio_id=%s", (nid,))
-                    del st.session_state["usuario"]
-                    st.session_state["baja_ok"] = True
-                    st.rerun()
+        if demo:
+            st.caption("Cuenta de demo: la baja del servicio no esta disponible.")
+        else:
+            st.subheader("Dar de baja el servicio")
+            st.caption("Tu panel y los enlaces de reserva de tus " + c["CLIS"] + " dejaran de funcionar. "
+                       "Descarga antes tus datos. Si cambias de opinion en los proximos 30 dias, escribenos y "
+                       "reactivamos la cuenta; despues se borran.")
+            with st.form("baja"):
+                conf = st.text_input(f"Escribe el nombre del negocio para confirmar: {c['negocio']['nombre']}")
+                if st.form_submit_button("Dar de baja mi negocio"):
+                    if conf.strip().lower() != c["negocio"]["nombre"].strip().lower():
+                        st.error("El nombre no coincide. No se ha dado de baja nada.")
+                    else:
+                        run("UPDATE negocio SET activo=FALSE, fecha_baja=%s WHERE id=%s", (date.today().isoformat(), nid))
+                        run("UPDATE usuario SET activo=FALSE WHERE negocio_id=%s", (nid,))
+                        del st.session_state["usuario"]
+                        st.session_state["baja_ok"] = True
+                        st.rerun()
