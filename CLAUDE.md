@@ -38,5 +38,9 @@ No programes. Lee ESTADO.md, HECHO.md y PROPUESTAS.md y propón 3 tareas nuevas,
 - Si la tarea es grande (más de unas 150 líneas o más de 3 archivos), divídela en TAREAS.md y haz solo la primera parte.
 - Máximo 2 intentos para arreglar el mismo error. Si no sale, para y explica.
 
+## Nunca en main
+Nunca fusiones un PR ni escribas en main, aunque creas que está aprobado; eso lo hace siempre Diego.
+Mi trabajo acaba en `gh pr create`. Tras el merge de Diego, solo `git checkout main && git pull` para leer.
+
 ## Para y pregunta a Diego
 Lo de la lista de AGENTS.md, más cualquier cosa que cueste dinero, sea legal/fiscal o cambie lo que ve el cliente de forma importante. Una sola pregunta, corta y con opciones A/B.

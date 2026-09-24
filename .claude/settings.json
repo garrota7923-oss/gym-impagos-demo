@@ -4,10 +4,25 @@
       "Read(./negocios.db)",
       "Read(./.streamlit/secrets.toml)",
       "Read(./static/**)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh api:*)",
+      "Bash(git merge:*)",
       "Bash(git push origin main:*)",
       "Bash(git push -u origin main:*)",
+      "Bash(git push --set-upstream origin main:*)",
+      "Bash(git push -f origin main:*)",
+      "Bash(git push --force origin main:*)",
+      "Bash(git push --force-with-lease origin main:*)",
+      "Bash(git push origin +main:*)",
       "Bash(git push origin HEAD:main:*)",
-      "Bash(gh pr merge:*)",
+      "Bash(git push origin +HEAD:main:*)",
+      "Bash(git push origin HEAD:refs/heads/main:*)",
+      "Bash(git push origin refs/heads/main:*)",
+      "Bash(git push origin :main:*)",
+      "Bash(git push --all:*)",
+      "Bash(git push --mirror:*)",
+      "Bash(git push origin --all:*)",
+      "Bash(git push origin --mirror:*)",
       "Bash(python migrar_a_supabase.py:*)",
       "Bash(python actualizar_bd.py:*)",
       "Bash(python crear_usuario.py:*)"
@@ -15,6 +30,19 @@
     "ask": [
       "Bash(pip install:*)",
       "Bash(rm:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/proteger_main.py\""
+          }
+        ]
+      }
     ]
   }
 }
