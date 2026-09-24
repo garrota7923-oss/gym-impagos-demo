@@ -31,6 +31,7 @@ Esto es orientacion, no asesoria legal: antes del primer cliente real, que lo re
 - **P9. Limpiar scripts viejos (S).** `importador_excel.py` es un prototipo antiguo y B2 lo sustituye. Borrarlo o moverlo solo con OK de Diego.
   Gratis y legal: si.
 - Demo: el visitante puede renombrar el negocio en Ajustes > Mi negocio y el reset no devuelve el nombre original.
+- **Examen mas duro para B2 (S).** Separar entreno/examen por estilo de club (no por archivo) para medir mejor Excels de formatos nunca vistos.
 
 ## Descartado por coste o legalidad
 - API oficial de WhatsApp para envios automaticos: cuesta dinero por mensaje y exige consentimiento. Se sigue con enlaces wa.me que pulsa el gerente.

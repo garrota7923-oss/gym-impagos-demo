@@ -27,9 +27,6 @@ Decisiones ya tomadas (no las cambies sin preguntar):
 
 Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Diego una sola vez para todas.
 
-- [ ] **B2. Notebook `notebooks/modelo_celdas.ipynb`.** Rasgos por celda (tipo, regex de dia/hora/CP, posicion, vecinos) + RandomForest de scikit-learn. Separar 250/50. Guardar el modelo con joblib en `modelos/modelo_celdas.joblib`: este archivo SI se sube a git (la app publicada lo necesita).
-  Hecho cuando: >=98% de celdas bien clasificadas en el examen.
-
 - [ ] **B3. Lector flexible (`lector_excel.py`).** Usa el modelo para extraer las reservas y devuelve tambien la confianza.
   Hecho cuando: >=97% de reservas correctas en los Excels de examen.
 
