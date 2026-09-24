@@ -5,3 +5,4 @@
 - 2026-09-23 · A3. Datos demo siempre frescos · PR #7
 - 2026-09-24 · A4. Reset rapido de la demo · PR #8
 - 2026-09-24 · A5. Proteger la demo · PR #9
+- 2026-09-24 · B1. Generador de Excels sinteticos · PR #10

@@ -27,9 +27,6 @@ Decisiones ya tomadas (no las cambies sin preguntar):
 
 Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Diego una sola vez para todas.
 
-- [ ] **B1. Generador de Excels sinteticos (`datos/generar_excels.py`).** Unos 300 Excels tipo horario de club con variaciones de formato (cabeceras de dia, fila de horas, numeracion de nombres, marcas de prueba CP, filas vacias, erratas) y su etiqueta correcta por celda. Solo datos inventados. Semilla fija (siempre salen iguales). Salida en `datos/generados/` (Excels + CSV), que esta en `.gitignore`: no se sube, se regenera con el script.
-  Hecho cuando: genera los archivos y un CSV de etiquetas.
-
 - [ ] **B2. Notebook `notebooks/modelo_celdas.ipynb`.** Rasgos por celda (tipo, regex de dia/hora/CP, posicion, vecinos) + RandomForest de scikit-learn. Separar 250/50. Guardar el modelo con joblib en `modelos/modelo_celdas.joblib`: este archivo SI se sube a git (la app publicada lo necesita).
   Hecho cuando: >=98% de celdas bien clasificadas en el examen.
 
