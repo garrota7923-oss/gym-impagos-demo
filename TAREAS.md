@@ -11,7 +11,9 @@ Objetivo: que la demo convenza a un club en 5 minutos. Primero lo que ayuda a ve
 
 ## FASE A — Lo que falta para vender (sin IA)
 
-(Fase A terminada: ver HECHO.md)
+- [ ] **A5. Proteger la demo.** En cuentas `DEMO_EMAILS` ocultar "Dar de baja el servicio" y cualquier accion que desactive el negocio o cambie la contrasena.
+
+(A1-A4 terminadas: ver HECHO.md)
 
 ---
 
