@@ -27,6 +27,9 @@ Decisiones ya tomadas (no las cambies sin preguntar):
 
 Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Diego una sola vez para todas.
 
+- [ ] **B2b. Examen duro.** Que el modelo se examine con formatos que no ha visto nunca. El generador guarda la FAMILIA de formato de cada Excel; validacion dejando fuera una familia cada vez (se entrena con el resto y se examina con la que falta). Anadir 2-3 Excels hechos a mano muy distintos (otro orden, otras palabras, celdas combinadas) en `datos/a_mano/`, solo con datos inventados. Informe de acierto por familia no vista.
+  Hecho cuando: acierto >=95% en formatos no vistos, o una lista clara de que falla y por que.
+
 - [ ] **B3. Lector flexible (`lector_excel.py`).** Usa el modelo para extraer las reservas y devuelve tambien la confianza.
   Hecho cuando: >=97% de reservas correctas en los Excels de examen.
 
