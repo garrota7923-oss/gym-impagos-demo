@@ -31,5 +31,18 @@
       "Bash(pip install:*)",
       "Bash(rm:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/proteger_main.py\""
+          }
+        ]
+      }
+    ]
   }
 }
