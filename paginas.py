@@ -1,6 +1,7 @@
 """Pantallas del panel del gerente."""
 import io
 import secrets
+import time
 from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
@@ -643,10 +644,11 @@ def ajustes():
                     if conf.strip().lower() != c["negocio"]["nombre"].strip().lower():
                         st.error("El nombre no coincide. No se ha borrado nada.")
                     else:
+                        t0 = time.perf_counter()
                         with st.spinner("Creando datos nuevos..."):
                             reiniciar(nid, c["negocio"]["tipo"], st.session_state["usuario"].get("email"))
                         st.session_state.pop("recordar_todos", None)
-                        st.success("Demo como nueva.")
+                        st.success(f"Demo como nueva en {time.perf_counter() - t0:.1f} s.")
         st.divider()
         st.subheader("Dar de baja el servicio")
         st.caption("Tu panel y los enlaces de reserva de tus " + c["CLIS"] + " dejaran de funcionar. "

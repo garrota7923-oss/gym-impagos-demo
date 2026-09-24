@@ -10,8 +10,10 @@ from db import motor
 
 # Negocios de demo, fijados en el codigo: cambiarlos exige un PR (no basta con tocar secrets ni el nombre)
 DEMO_NEGOCIOS = {1}
-# Inserciones cuyo id no se usa despues: van por lotes al final
-EN_LOTE = ("INSERT INTO evento", "INSERT INTO cobro", "INSERT OR IGNORE INTO asistencia")
+# Todo va por lotes al final, en este orden (primero lo que otras tablas apuntan).
+# cliente y membresia reciben su id por adelantado de la secuencia para no hacer un viaje por fila.
+EN_LOTE = ("cliente", "membresia", "evento", "cobro", "asistencia")
+CON_ID = ("cliente", "membresia")
 # Orden de borrado: primero lo que apunta a otras tablas
 TABLAS = ["reserva", "asistencia", "cobro", "evento", "membresia", "cliente", "plan", "actividad"]
 
@@ -25,40 +27,64 @@ def es_demo(email):
 
 
 class _Res:
-    def __init__(self, r):
-        self.r = r
+    def __init__(self, fila):
+        self.fila = fila
 
     @property
     def lastrowid(self):
-        return self.r.fetchone()[0]
+        return self.fila[0]
 
     def fetchone(self):
-        return self.r.fetchone()
+        return self.fila
 
 
 class _Cursor:
-    """Traduce las ordenes de crear_bd.py (sqlite) a PostgreSQL."""
+    """Traduce las ordenes de crear_bd.py (sqlite) a PostgreSQL y las junta por tabla (un viaje por tabla)."""
     def __init__(self, con):
         self.con = con
         self.lotes = {}
+        self.ids = {t: [] for t in CON_ID}
+        self.planes = {}
+
+    def _id(self, tabla):
+        """Siguiente id de la secuencia; se piden de 1000 en 1000 (un viaje)."""
+        if not self.ids[tabla]:
+            self.ids[tabla] = [r[0] for r in self.con.exec_driver_sql(
+                "SELECT nextval(pg_get_serial_sequence(%s, 'id')) FROM generate_series(1, 1000)", (tabla,))]
+        return self.ids[tabla].pop(0)
 
     def execute(self, sql, p=()):
-        if sql.strip().startswith(EN_LOTE):
-            m = re.search(r"VALUES\s*(\(.*\))", sql, re.S)
+        sql = sql.strip()
+        if sql.startswith("SELECT importe, meses FROM plan"):
+            return _Res(self.planes[p[0]])
+        tabla = re.match(r"INSERT (?:OR IGNORE )?INTO (\w+)", sql)
+        tabla = tabla and tabla.group(1)
+        if tabla in EN_LOTE:
+            m = re.search(r"VALUES\s*\((.*)\)", sql, re.S)
             base = sql[:m.start()].replace("INSERT OR IGNORE", "INSERT") + "VALUES %s"
+            plantilla = m.group(1).replace("?", "%s")
             if "INSERT OR IGNORE" in sql:
                 base += " ON CONFLICT DO NOTHING"
-            self.lotes.setdefault((base, m.group(1).replace("?", "%s")), []).append(tuple(p))
-            return None
+            nuevo = None
+            if tabla in CON_ID:
+                nuevo = self._id(tabla)
+                base = base.replace(f"INTO {tabla} (", f"INTO {tabla} (id, ", 1)
+                plantilla, p = "%s, " + plantilla, (nuevo, *p)
+            self.lotes.setdefault(tabla, {}).setdefault((base, f"({plantilla})"), []).append(tuple(p))
+            return _Res((nuevo,))
         sql = sql.replace("?", "%s")
-        if sql.lstrip().startswith("INSERT"):
+        if sql.startswith("INSERT"):
             sql += " RETURNING id"
-        return _Res(self.con.exec_driver_sql(sql, tuple(p)))
+        fila = self.con.exec_driver_sql(sql, tuple(p)).fetchone()
+        if tabla == "plan":
+            self.planes[fila[0]] = (p[3], p[4])  # (negocio_id, nombre, tipo, importe, meses, sesiones)
+        return _Res(fila)
 
     def volcar(self):
         cur = self.con.connection.cursor()
-        for (base, plantilla), filas in self.lotes.items():
-            execute_values(cur, base, filas, template=plantilla, page_size=1000)
+        for tabla in EN_LOTE:
+            for (base, plantilla), filas in self.lotes.get(tabla, {}).items():
+                execute_values(cur, base, filas, template=plantilla, page_size=1000)
         self.lotes = {}
 
 
@@ -77,8 +103,8 @@ def reiniciar(nid, tipo, email):
                                    (email.strip(),)).fetchall()
         if [r[0] for r in suyo] != [nid]:
             raise PermissionError("El usuario no pertenece a este negocio")
-        for t in TABLAS:
-            con.exec_driver_sql(f"DELETE FROM {t} WHERE negocio_id=%s", (nid,))
+        # Todos los DELETE en un viaje: psycopg2 sustituye los parametros en el cliente, asi que admite varias ordenes
+        con.exec_driver_sql("; ".join(f"DELETE FROM {t} WHERE negocio_id=%(nid)s" for t in TABLAS), {"nid": nid})
         cur = _Cursor(con)
         crear_bd.rellenar(cur, nid, planes, actividades, n)
         cur.volcar()
