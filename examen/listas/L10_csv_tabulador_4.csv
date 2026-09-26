@@ -1,0 +1,26 @@
+id	nombre	apellido1	apellido2	telefono	email	plan	precio	fecha_alta	estado_pago	talla_camiseta
+100	Sara	Ruiz	Sánchez	744582302		Ilimitado	35	2026-07-31	pagado	S
+101	Martina	Díaz	Molina	762508454		Mensual	60	2026-01-30	pagado	M
+102	Cristina	Martínez	Gil	613731997		Mensual	60	2026-06-25	pagado	S
+103	Adrián	Martínez	Ortiz	761041116	adrian.martinez16@hotmail.com	Ilimitado	60	2026-06-05	pagado	S
+104	Jorge	Hernández	Álvarez	699822377		Ilimitado	35	2026-09-07	pagado	L
+105	Raquel	Fernández	Ruiz	691067513	raquel.fernandez60@outlook.es	Ilimitado	65	2026-03-17	pagado	L
+106	Noelia	Navarro	Serrano	666012447	noelia.navarro85@outlook.es	Ilimitado	45	2026-04-29	pagado	M
+107	Cristina	Jiménez	Navarro	715497994	cristina.jimenez44@gmail.com	Mensual	55	2026-05-18	pagado	S
+108	Marcos	Pérez	Ramos	608711972	marcos.perez49@gmail.com	2 días	60	2026-07-13	pendiente	S
+109	Daniel	Romero	Romero	683966831		2 días	55	2026-04-07	pagado	M
+110	Noelia	Ortiz	Moreno	664595450	noelia.ortiz41@outlook.es	Mensual	60	2026-04-11	pagado	S
+111	Daniel	Ortiz	Alonso	629640186	daniel.ortiz44@yahoo.es	Mensual	45	2026-05-14	pagado	L
+112	Bruno	Gómez	Gómez	741788370		Mensual	50	2026-08-04	pagado	S
+113	Jorge	Ortiz	Gutiérrez	652843642	jorge.ortiz95@outlook.es	Mensual	60	2026-02-13	pagado	S
+114	Íker	Castro	Álvarez	722531654		2 días	50	2026-04-12	pagado	M
+115	Javier	Castro	Martín	653747422	javier.castro97@outlook.es	Ilimitado	50	2026-04-15	pagado	M
+116	Nuria	Martínez	Moreno	624603096	nuria.martinez68@gmail.com	2 días	45	2026-07-18	pagado	M
+117	Álvaro	Gutiérrez	Martínez	710117732	alvaro.gutierrez12@gmail.com	Mensual	55	2026-08-30	pagado	M
+118	Javier	Martín	Torres	735131384	javier.martin75@gmail.com	Mensual	45	2026-08-22	pendiente	S
+119	Paula	Domínguez	Gómez	650928344	paula.dominguez92@hotmail.com	Mensual	50	2026-07-27	pagado	S
+120	Noelia	Hernández	Castro	765489171	noelia.hernandez74@yahoo.es	Mensual	35	2026-06-04	pendiente	L
+121	Álvaro	Gómez	López	642723467	alvaro.gomez13@hotmail.com	2 días	50	2026-03-06	pagado	S
+122	Andrea	Molina	Gómez	799798161	andrea.molina31@gmail.com	Mensual	60	2026-09-06	pendiente	S
+123	Laura	Gómez	Romero	755661041	laura.gomez86@outlook.es	Ilimitado	40	2026-06-28	pagado	L
+124	Víctor	Moreno	Torres	609253888		Ilimitado	45	2026-03-21	pagado	S

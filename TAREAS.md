@@ -27,13 +27,23 @@ Decisiones ya tomadas (no las cambies sin preguntar):
 
 Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Diego una sola vez para todas.
 
-- [ ] **B3. Lector flexible (`lector_excel.py`).** Usa el modelo para extraer las reservas y devuelve tambien la confianza.
-  Hecho cuando: >=97% de reservas correctas en los Excels de examen.
+Plan completo y principios: `examen/PLAN_IMPORTADOR.md`. Reglas y metricas del examen: `examen/LEEME.md`.
+`examen/` es solo para medir: prohibido entrenar con ella o ajustar el codigo a esos archivos concretos.
 
-- [ ] **B4. Pagina "Importar" en el panel.** Subir Excel, vista previa editable con avisos, el gerente confirma, se guarda con `negocio_id`. Preguntar antes de crear tablas nuevas (perfil por club).
+- [ ] **B3. Lector robusto de archivos.** Formatos, codificaciones, hojas, cabecera real, filas basura y normalizadores, con tests unitarios de cada normalizador.
+  Hecho cuando: los 60 archivos de `examen/listas/` se leen sin excepcion.
 
-- [ ] **B5. Respaldo con Gemini solo cuando la confianza sea baja.** Enviar la estructura con nombres seudonimizados, recibir JSON.
-  Hecho cuando: sin clave o si Gemini falla, la app sigue funcionando.
+- [ ] **B4. Mapeo de listas.** Socios y pagos, incluido el formato ancho (un mes por columna).
+  Hecho cuando: >=98% de filas correctas y 0 filas de mas en `examen/listas/`.
+
+- [ ] **B5. Lector de cuadriculas.** Modelo de celdas y separacion de varios nombres por celda.
+  Hecho cuando: >=98% de reservas correctas en `examen/cuadriculas/`.
+
+- [ ] **B6. Pagina "Importar".** Vista previa editable, errores y avisos, deteccion de duplicados, transaccion, `lote_id` y "Deshacer". Preguntar antes de cambiar el esquema de la BD.
+
+- [ ] **B7. Perfil por club y respaldo con Gemini.** Solo si la confianza es baja; sin clave, la app sigue funcionando.
+
+- [ ] **B8. Informe del examen.** Script `examen/evaluar.py` que saca las 4 metricas del LEEME por familia. Se ejecuta en cada PR del importador.
 
 ---
 

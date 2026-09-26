@@ -1,0 +1,101 @@
+archivo,tipo,familia,que_prueba
+listas/L01_socios_limpio_1.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_1.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_1.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_1.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_1.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_1.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_1.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_1.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_1.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_1.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+listas/L01_socios_limpio_2.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_2.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_2.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_2.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_2.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_2.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_2.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_2.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_2.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_2.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+listas/L01_socios_limpio_3.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_3.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_3.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_3.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_3.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_3.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_3.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_3.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_3.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_3.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+listas/L01_socios_limpio_4.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_4.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_4.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_4.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_4.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_4.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_4.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_4.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_4.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_4.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+listas/L01_socios_limpio_5.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_5.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_5.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_5.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_5.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_5.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_5.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_5.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_5.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_5.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+listas/L01_socios_limpio_6.xlsx,lista,L01,Caso ideal
+listas/L02_titulo_arriba_6.xlsx,lista,L02,"Filas de título antes de la cabecera, columnas desordenadas, importes y fechas como texto"
+listas/L03_csv_puntoycoma_6.csv,lista,L03,"CSV de Excel español: separador ; , codificación Windows-1252, decimales con coma, MAYÚSCULAS"
+listas/L04_csv_ingles_6.csv,lista,L04,"Cabeceras en inglés, UTF-8 con BOM, fechas ISO, TRUE/FALSE"
+listas/L05_sucio_6.xlsx,lista,L05,"Espacios sobrantes, filas vacías, 1 fila duplicada (no debe importarse dos veces), fila TOTAL al final (no es un socio), fechas como número de serie de Excel, notas libres (dato potencialmente sensible: no importar como dato de salud)"
+listas/L06_pagos_por_meses_6.xlsx,lista,L06,Pagos en formato ancho (un mes por columna). Muy habitual en clubes. Celda vacía = no pagado
+listas/L07_pagos_lista_6.xlsx,lista,L07,"Listado de cobros: una fila por pago, mes deducido del concepto"
+listas/L08_activos_y_bajas_6.xlsx,lista,L08,"Varias hojas: Activos, Bajas (estado baja) y Notas (ignorar)"
+listas/L09_cabecera_doble_6.xlsx,lista,L09,"Cabecera en dos filas con celdas combinadas; nombre escrito como 'Apellidos, Nombre'"
+listas/L10_csv_tabulador_6.csv,lista,L10,"Exportación de otro programa: tabuladores, apellidos en 2 columnas, columnas que no interesan"
+cuadriculas/G01_bloques_1.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_1.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_1.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_1.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_2.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_2.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_2.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_2.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_3.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_3.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_3.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_3.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_4.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_4.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_4.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_4.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_5.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_5.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_5.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_5.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_6.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_6.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_6.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_6.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_7.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_7.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_7.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_7.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_8.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_8.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_8.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_8.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_9.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_9.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_9.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_9.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
+cuadriculas/G01_bloques_10.xlsx,cuadricula,G01,Bloques por día con fila de horas (tipo club de boxeo)
+cuadriculas/G02_semana_10.xlsx,cuadricula,G02,"Días en columnas, horas en filas, varios nombres por celda"
+cuadriculas/G03_transpuesta_10.xlsx,cuadricula,G03,"Días en filas, horas en columnas, nombres separados por salto de línea"
+cuadriculas/G04_hoja_por_dia_10.xlsx,cuadricula,G04,Una hoja por día (el día está en el nombre de la hoja)
