@@ -30,10 +30,11 @@ Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Die
 Plan completo y principios: `examen/PLAN_IMPORTADOR.md`. Reglas y metricas del examen: `examen/LEEME.md`.
 `examen/` es solo para medir: prohibido entrenar con ella o ajustar el codigo a esos archivos concretos.
 
-- [ ] **B3. Lector robusto de archivos.** Formatos, codificaciones, hojas, cabecera real, filas basura y normalizadores, con tests unitarios de cada normalizador.
-  Hecho cuando: los 60 archivos de `examen/listas/` se leen sin excepcion.
+- [ ] **B3b. Normalizadores** (la lectura, B3a, esta hecha: `lector_archivos.py`). Fechas (dd/mm/aaaa, dd/mm/aa, ISO, "1 de octubre", numero de serie de Excel; siempre dia/mes), importes, Si/No, telefonos (9 digitos), nombres ("Apellidos, Nombre", apellidos en 2 columnas). Tests unitarios de cada uno en `tests/`.
+  Hecho cuando: `python -m unittest discover tests` pasa, con casos inventados de cada formato del plan.
 
 - [ ] **B4. Mapeo de listas.** Socios y pagos, incluido el formato ancho (un mes por columna).
+  Incluye duplicados casi exactos dentro del mismo archivo (mismo telefono normalizado y nombre sin tildes, p. ej. "0034 600..." y "600..."): el lector solo quita los exactos.
   Hecho cuando: >=98% de filas correctas y 0 filas de mas en `examen/listas/`.
 
 - [ ] **B5. Lector de cuadriculas.** Modelo de celdas y separacion de varios nombres por celda.

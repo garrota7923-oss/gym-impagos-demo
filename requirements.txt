@@ -5,3 +5,4 @@ matplotlib
 openpyxl
 sqlalchemy
 psycopg2-binary
+xlrd==2.0.2
