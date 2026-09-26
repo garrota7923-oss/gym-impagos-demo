@@ -1,6 +1,8 @@
-HORARIOS*
-*FABRIKA*
-*FÁBRIKA*
+# Excels reales de clubes: nunca al repo (mayusculas o minusculas, con y sin tilde)
+[Hh][Oo][Rr][Aa][Rr][Ii][Oo][Ss]*
+*[Ff][Aa][BbVv][Rr][Ii][Kk][Aa]*
+*[Ff]Á[BbVv][Rr][Ii][Kk][Aa]*
+*[Ff]á[BbVv][Rr][Ii][Kk][Aa]*
 __pycache__/
 .streamlit/secrets.toml
 datos/generados/
