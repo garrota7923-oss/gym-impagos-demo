@@ -1,0 +1,25 @@
+id	nombre	apellido1	apellido2	telefono	email	plan	precio	fecha_alta	estado_pago	talla_camiseta
+100	Óscar	Ramírez	Martínez	624965679	oscar.ramirez81@gmail.com	Mensual	55	2026-04-28	pagado	L
+101	Noelia	Martín	Ortiz	610772575	noelia.martin88@gmail.com	2 días	35	2026-06-03	pagado	M
+102	Íker	Martín	Fernández	645493529		2 días	45	2026-04-25	pagado	M
+103	Bruno	Álvarez	Gómez	740514381	bruno.alvarez52@yahoo.es	Mensual	60	2026-08-31	pendiente	L
+104	Martina	Gómez	Gil	707512280	martina.gomez44@outlook.es	Ilimitado	60	2026-06-10	pagado	L
+105	Pablo	Martín	Molina	734546268		Ilimitado	60	2026-03-28	pendiente	L
+106	Bruno	Sánchez	Martínez	605161676		Ilimitado	45	2026-01-02	pendiente	L
+107	Raquel	Hernández	Ortiz	670336996	raquel.hernandez67@outlook.es	2 días	55	2026-03-21	pagado	L
+108	Marta	Muñoz	Alonso	783427556	marta.munoz88@hotmail.com	Mensual	65	2026-07-17	pagado	S
+109	Raquel	Molina	Molina	623729613	raquel.molina69@yahoo.es	Mensual	50	2026-06-12	pagado	M
+110	Martina	Castro	Jiménez	649188478	martina.castro83@hotmail.com	Ilimitado	65	2026-07-25	pendiente	L
+111	Paula	Ramírez	Alonso	739598932	paula.ramirez49@hotmail.com	2 días	35	2026-01-27	pagado	L
+112	Carla	Vázquez	López	790277521		Mensual	35	2026-02-11	pagado	L
+113	Elena	Gil	Muñoz	634399995	elena.gil49@yahoo.es	Ilimitado	45	2026-09-08	pendiente	L
+114	Raquel	Sánchez	Ortiz	655489586	raquel.sanchez19@hotmail.com	Ilimitado	60	2026-02-26	pendiente	S
+115	Claudia	Martínez	Muñoz	658966495	claudia.martinez59@gmail.com	Mensual	45	2026-02-22	pagado	S
+116	Iván	Navarro	Serrano	668636780	ivan.navarro40@gmail.com	2 días	40	2026-04-29	pagado	M
+117	Alba	Navarro	Muñoz	785268188	alba.navarro18@gmail.com	Ilimitado	50	2026-08-28	pagado	M
+118	Sofía	Torres	Romero	610052490	sofia.torres42@gmail.com	Ilimitado	60	2026-03-08	pendiente	L
+119	Beatriz	Martín	García	641080405	beatriz.martin37@yahoo.es	2 días	60	2026-03-14	pendiente	M
+120	Claudia	García	Romero	696467831	claudia.garcia36@yahoo.es	Ilimitado	60	2026-03-05	pagado	L
+121	Carla	Jiménez	Hernández	602544121	carla.jimenez61@yahoo.es	Ilimitado	45	2026-01-04	pagado	L
+122	Mario	Gutiérrez	Navarro	604204687		2 días	35	2026-06-11	pagado	M
+123	Daniel	Sánchez	Hernández	657897948	daniel.sanchez34@gmail.com	Mensual	65	2026-02-15	pagado	L

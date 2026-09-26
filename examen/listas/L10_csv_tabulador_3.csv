@@ -1,0 +1,25 @@
+id	nombre	apellido1	apellido2	telefono	email	plan	precio	fecha_alta	estado_pago	talla_camiseta
+100	Íker	Romero	Gil	636498492	iker.romero50@outlook.es	Ilimitado	65	2026-04-27	pagado	S
+101	Iván	Martín	Sánchez	739676514		Mensual	60	2026-05-28	pagado	S
+102	Bruno	García	Gutiérrez	659473549	bruno.garcia8@outlook.es	Ilimitado	35	2026-03-23	pendiente	M
+103	Tomás	Domínguez	Álvarez	720136262	tomas.dominguez76@outlook.es	2 días	35	2026-07-15	pagado	S
+104	Hugo	Hernández	Romero	716429472	hugo.hernandez23@outlook.es	Ilimitado	40	2026-06-01	pagado	M
+105	Laura	Ortiz	Álvarez	600536728	laura.ortiz73@outlook.es	Mensual	40	2026-07-11	pagado	S
+106	Raquel	Navarro	Molina	641425391	raquel.navarro33@gmail.com	2 días	45	2026-06-14	pagado	M
+107	Bruno	Gutiérrez	Gómez	649855961	bruno.gutierrez96@yahoo.es	2 días	50	2026-04-13	pagado	S
+108	Daniel	Blanco	Ramírez	726367885	daniel.blanco53@outlook.es	2 días	45	2026-04-23	pagado	M
+109	Adrián	Molina	Ruiz	779014636	adrian.molina77@gmail.com	Mensual	60	2026-01-09	pagado	L
+110	Marcos	Navarro	Díaz	675942655		Ilimitado	65	2026-06-04	pendiente	L
+111	Marta	Ramos	Molina	602173767	marta.ramos79@outlook.es	Ilimitado	45	2026-05-23	pagado	L
+112	Lucía	Jiménez	Gutiérrez	698813216	lucia.jimenez99@outlook.es	2 días	55	2026-06-17	pagado	L
+113	Gonzalo	López	Castro	781844555	gonzalo.lopez69@gmail.com	Ilimitado	60	2026-07-30	pagado	M
+114	Iván	Serrano	Gómez	789071931		2 días	35	2026-03-14	pendiente	S
+115	Andrea	Serrano	López	669174034	andrea.serrano48@hotmail.com	Ilimitado	45	2026-07-01	pagado	L
+116	Marta	Alonso	Ramírez	774242624	marta.alonso62@outlook.es	2 días	40	2026-02-22	pendiente	L
+117	Nerea	Sánchez	Gómez	754858775	nerea.sanchez37@outlook.es	Mensual	65	2026-02-14	pagado	S
+118	Andrea	Hernández	Díaz	706495314	andrea.hernandez2@gmail.com	Mensual	40	2026-09-02	pagado	S
+119	Iván	Álvarez	Castro	760073345		2 días	55	2026-05-08	pendiente	S
+120	Claudia	Alonso	Alonso	660417910	claudia.alonso54@hotmail.com	2 días	65	2026-07-17	pagado	L
+121	Álvaro	Ortiz	Romero	612709299	alvaro.ortiz81@outlook.es	Ilimitado	45	2026-03-24	pendiente	S
+122	Raquel	López	Blanco	780221145	raquel.lopez93@hotmail.com	2 días	65	2026-02-07	pagado	S
+123	Elena	Pérez	Ramos	615939351		Mensual	35	2026-04-10	pagado	L

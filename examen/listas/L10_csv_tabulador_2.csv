@@ -1,0 +1,22 @@
+id	nombre	apellido1	apellido2	telefono	email	plan	precio	fecha_alta	estado_pago	talla_camiseta
+100	Hugo	Fernández	Romero	615241468	hugo.fernandez90@yahoo.es	Ilimitado	45	2026-02-12	pagado	L
+101	Víctor	Moreno	Gil	607453598		2 días	50	2026-06-19	pendiente	S
+102	Sergio	Muñoz	Hernández	724019130	sergio.munoz16@outlook.es	Mensual	40	2026-07-04	pagado	M
+103	Álvaro	Sánchez	Ruiz	752979557	alvaro.sanchez17@gmail.com	Ilimitado	40	2026-04-10	pagado	S
+104	Noelia	Martín	Martín	705508726		2 días	60	2026-06-19	pendiente	S
+105	Irene	Gómez	Vázquez	687216289	irene.gomez73@hotmail.com	Ilimitado	45	2026-07-23	pagado	L
+106	Bruno	Martín	Díaz	606128969		Ilimitado	60	2026-07-04	pagado	M
+107	Gonzalo	Ramírez	Blanco	616869135		2 días	45	2026-05-02	pendiente	L
+108	Beatriz	Domínguez	Fernández	670572023	beatriz.dominguez1@outlook.es	Ilimitado	50	2026-01-26	pendiente	S
+109	Nuria	Fernández	Castro	629006026	nuria.fernandez20@hotmail.com	2 días	40	2026-07-01	pagado	S
+110	Raquel	Moreno	Alonso	783123294	raquel.moreno43@gmail.com	Ilimitado	65	2026-05-03	pagado	L
+111	Gonzalo	Serrano	Ruiz	625682107	gonzalo.serrano69@yahoo.es	Mensual	45	2026-06-06	pagado	S
+112	Mario	Díaz	Ortiz	626148840	mario.diaz35@gmail.com	Ilimitado	55	2026-06-15	pagado	S
+113	Óscar	Díaz	Ramírez	772924169	oscar.diaz22@yahoo.es	2 días	55	2026-06-19	pagado	S
+114	Jorge	Muñoz	Ramírez	713497367	jorge.munoz58@outlook.es	2 días	55	2026-02-22	pagado	L
+115	Alba	Ramos	Molina	788411879	alba.ramos35@outlook.es	2 días	60	2026-02-12	pagado	M
+116	Adrián	Castro	Ramírez	662784948	adrian.castro10@outlook.es	Mensual	40	2026-01-18	pendiente	S
+117	Lucía	Jiménez	Domínguez	730684450	lucia.jimenez24@yahoo.es	Mensual	45	2026-05-19	pendiente	S
+118	Gonzalo	Domínguez	Ortiz	745772029	gonzalo.dominguez85@outlook.es	Mensual	65	2026-02-12	pagado	S
+119	Jorge	Hernández	Navarro	694384024	jorge.hernandez31@gmail.com	Ilimitado	55	2026-06-06	pendiente	S
+120	Adrián	Ortiz	Ramos	747903351		Ilimitado	50	2026-02-20	pendiente	L

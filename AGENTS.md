@@ -44,6 +44,15 @@ Pregunta **una sola vez, en corto y con opciones** (A/B), y espera respuesta.
 - Subir o mostrar secretos (`DATABASE_URL`, contraseñas, claves API).
 - Usar datos personales reales: solo datos inventados. Los Excel reales de clubes (`horarios*`, `*fabrika*`, en mayusculas o minusculas y con o sin tilde) están en `.gitignore` y no se leen. `datos/a_mano/` son inventados y si van al repo.
 
+## Importador (plan en `examen/PLAN_IMPORTADOR.md`)
+- `examen/` es solo para medir: prohibido entrenar con ella o ajustar el código a esos archivos. Si algo falla, se añade al generador el TIPO de formato que falta.
+- Nada se escribe sin vista previa y confirmación del gerente. Cada importación, en una sola transacción y con `lote_id` para poder deshacerla.
+- Sin duplicados: se compara con lo existente (teléfono normalizado, nombre sin tildes); si hay duda, se pregunta.
+- Mejor avisar que equivocarse: con confianza baja se dice y se pide ayuda. 0 filas basura (títulos, totales, duplicados).
+- Un error bloquea la fila (fecha imposible); un aviso deja importar (email vacío).
+- RGPD: solo los campos necesarios. Las notas libres no se importan por defecto (pueden tener datos de salud). A Gemini solo cabeceras y ejemplos seudonimizados.
+- Siempre por `negocio_id`, sin excepción.
+
 ## Reparto de trabajo
 - **Claude**: planifica, programa y habla con Diego.
 - **Codex**: revisa los cambios de Claude (`/codex:review`) y resuelve atascos concretos (`/codex:rescue`). No reescribe lo que funciona.
