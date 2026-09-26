@@ -27,9 +27,6 @@ Decisiones ya tomadas (no las cambies sin preguntar):
 
 Dependencias nuevas de esta fase (scikit-learn, joblib, jupyter): pedir OK a Diego una sola vez para todas.
 
-- [ ] **B2b-2. Excels hechos a mano.** (La parte 1, dejar fuera una familia cada vez, esta hecha: 99,99%; ver HECHO.md.) Anadir 2-3 Excels hechos a mano muy distintos (otro orden, otras palabras, celdas combinadas) en `datos/a_mano/`, solo con datos inventados, con sus etiquetas, y examinar el modelo con ellos en el notebook.
-  Hecho cuando: acierto >=95% en esos Excels, o una lista clara de que falla y por que.
-
 - [ ] **B3. Lector flexible (`lector_excel.py`).** Usa el modelo para extraer las reservas y devuelve tambien la confianza.
   Hecho cuando: >=97% de reservas correctas en los Excels de examen.
 

@@ -42,7 +42,7 @@ Pregunta **una sola vez, en corto y con opciones** (A/B), y espera respuesta.
 
 ## Nunca
 - Subir o mostrar secretos (`DATABASE_URL`, contraseñas, claves API).
-- Usar datos personales reales: solo datos inventados. Los Excel reales de clubes (`HORARIOS*`, `*FABRIKA*`) están en `.gitignore` y no se leen.
+- Usar datos personales reales: solo datos inventados. Los Excel reales de clubes (`horarios*`, `*fabrika*`, en mayusculas o minusculas y con o sin tilde) están en `.gitignore` y no se leen. `datos/a_mano/` son inventados y si van al repo.
 
 ## Reparto de trabajo
 - **Claude**: planifica, programa y habla con Diego.

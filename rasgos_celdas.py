@@ -7,7 +7,7 @@ from datetime import datetime, time
 ETIQUETAS = ["dia", "hora", "nombre", "prueba", "otro"]
 RE_DIA = re.compile(r"^[A-Z]{2,10},?\s*\d{1,2}$")
 RE_HORA = re.compile(r"^\d{1,2}([:.]\d{2})?\s*H?(\s*-\s*\d{1,2}([:.]\d{2})?\s*H?)?$")
-RE_CP = re.compile(r"(\bCP\s*\d*|\(CP\))\s*$")
+RE_CP = re.compile(r"\bCP\s*\d*\b|\bPRUEBA\b")  # marca de clase de prueba, delante, detras o en medio
 RE_NUM = re.compile(r"^\d{1,2}\s*[.)]?-?\s*\S")
 # Tipo de celda a simple vista (lo usan tambien los vecinos)
 VACIA, DIA, HORA, CP, NUMERADO, TEXTO, NUMERO = range(7)

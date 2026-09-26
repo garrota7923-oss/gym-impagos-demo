@@ -8,3 +8,4 @@
 - 2026-09-24 · B1. Generador de Excels sinteticos · PR #10
 - 2026-09-24 · B2. Modelo de celdas (RandomForest) · PR #11
 - 2026-09-24 · B2b (parte 1). Examen dejando fuera cada familia de formato: 99,99% · PR #12
+- 2026-09-26 · B2b-2. Excels hechos a mano: 52% -> 100% por celda (formatos semana y lista) · PR #13

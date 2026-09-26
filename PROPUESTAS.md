@@ -32,6 +32,7 @@ Esto es orientacion, no asesoria legal: antes del primer cliente real, que lo re
   Gratis y legal: si.
 - Demo: el visitante puede renombrar el negocio en Ajustes > Mi negocio y el reset no devuelve el nombre original.
 - **Examen por opcion no vista (S).** Dejar fuera todos los Excels con un valor de formato (p. ej. horas "rango" o dias "corto"): eso si es un formato nuevo, a diferencia de dejar fuera una familia (99,99%, porque combina opciones ya vistas).
+- **Dias con fecha como tipo DIA (S).** `rasgos_celdas.tipo` trata "Lunes 5 oct", "01/10/2026" y las celdas de fecha (datetime) como texto u hora; el modelo acierta por contexto, pero al dejar fuera la familia 9 (semana + "Lunes 5 oct") baja a 96,56%. Ampliar RE_DIA y reentrenar.
 
 ## Descartado por coste o legalidad
 - API oficial de WhatsApp para envios automaticos: cuesta dinero por mensaje y exige consentimiento. Se sigue con enlaces wa.me que pulsa el gerente.
