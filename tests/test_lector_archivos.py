@@ -33,6 +33,16 @@ class TestLector(unittest.TestCase):
                 self.assertEqual(t[0].cabecera, ["Nombre", "Cuota", "Alta"], (sep, cod))
                 self.assertEqual(t[0].filas[0][0], "Ana Núñez", (sep, cod))
 
+    def test_csv_corto_elige_bien_el_separador(self):
+        for texto in ["Nombre;Cuota\nAna;35,50\n", "Nombre,Cuota\nAna,35\n", "Nombre\tNotas\nAna\ta, b, c\n"]:
+            t, _ = leer("a.csv", texto.encode())
+            self.assertEqual(len(t[0].cabecera), 2, texto)
+
+    def test_cabecera_con_anos_numericos(self):
+        t, _ = leer("a.xlsx", xlsx(("Pagos", [["Socio", "Cuota", 2025, 2026], ["Ana Gil", 30, "X", "X"], ["Luis Paz", 40, None, "X"]])))
+        self.assertEqual(t[0].cabecera, ["Socio", "Cuota", 2025, 2026])
+        self.assertEqual(len(t[0].filas), 2)
+
     def test_titulo_filas_vacias_total_y_duplicado(self):
         datos = xlsx(("Hoja", [["CLUB INVENTADO"], [], ["Nombre", "Telefono", "Cuota"], ["Ana Gil", "600000001", 30],
                               [None, None, None], ["  Luis Paz ", "600000002", 40], ["Luis Paz", "600000002", 40],

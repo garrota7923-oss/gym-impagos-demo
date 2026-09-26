@@ -63,8 +63,12 @@ def leer_csv(datos):
         except UnicodeDecodeError:
             texto = datos.decode("cp1252", errors="replace")   # CSV de Excel espanol en Windows
     lineas = [l for l in texto.splitlines() if l.strip()][:30]
-    # El separador es el que aparece el mismo numero de veces (y alguna) en casi todas las lineas
-    sep = max(SEPARADORES, key=lambda s: (sorted(l.count(s) for l in lineas)[len(lineas) // 4] if lineas else 0))
+    # El separador es el que aparece el mismo numero de veces (y alguna) en mas lineas
+    def constancia(s):
+        n = [l.count(s) for l in lineas]
+        moda = max(sorted(set(n), reverse=True), key=n.count, default=0)
+        return (n.count(moda) if moda else 0, moda)
+    sep = max(SEPARADORES, key=constancia)
     return [list(f) for f in csv.reader(io.StringIO(texto), delimiter=sep)]
 
 
@@ -89,9 +93,14 @@ def valor(v):
     return v
 
 
-def es_cabecera(fila):
+def es_cabecera(fila, solo_texto=False):
+    """Casi todo texto sin datos (emails, telefonos, fechas). Se admiten numeros sueltos (p. ej. anos) si hay mas texto."""
     llenas = [v for v in fila if v is not None]
-    return len(llenas) >= 2 and all(isinstance(v, str) and not RE_DATO.search(v) for v in llenas)
+    textos = sum(isinstance(v, str) and not RE_DATO.search(v) for v in llenas)
+    numeros = sum(isinstance(v, int) and not isinstance(v, bool) for v in llenas)
+    if solo_texto:
+        return len(llenas) >= 2 and textos == len(llenas)
+    return len(llenas) >= 2 and textos + numeros == len(llenas) and textos >= numeros
 
 
 def tabla(hoja, crudas):
@@ -107,7 +116,7 @@ def tabla(hoja, crudas):
     n_cab, cab = filas[pos]
     avisos = [f"Filas 1-{n_cab - 1}: titulo antes de la cabecera, no se importa."] if n_cab > 1 else []
     # Cabecera doble: la de arriba agrupa (valores repetidos por celdas combinadas) y la de abajo detalla
-    if pos + 1 < len(filas) and es_cabecera(filas[pos + 1][1]):
+    if pos + 1 < len(filas) and es_cabecera(filas[pos + 1][1], solo_texto=True):
         abajo = filas[pos + 1][1]
         if len({v for v in cab if v}) < len({v for v in abajo if v}):
             cab = [f"{a} / {b}" if a and b and a != b else (b or a) for a, b in zip(cab, abajo + [None] * len(cab))]
