@@ -59,7 +59,12 @@ class TestLector(unittest.TestCase):
                      combinar=["A1:B1"])
         t, _ = leer("a.xlsx", datos)
         self.assertEqual(t[0].cabecera, ["SOCIO / Nombre", "SOCIO / Movil", "PAGOS / Octubre"])
+        self.assertEqual(t[0].fila_cabecera, 2)
         self.assertEqual(len(t[0].filas), 1)
+
+    def test_fila_de_texto_bajo_cabecera_con_hueco_no_se_pierde(self):
+        t, _ = leer("a.xlsx", xlsx(("Hoja", [["Nombre", None, "Plan"], ["Ana Gil", "Tarde", "Pilates"], ["Luis Paz", "Manana", "Boxeo"]])))
+        self.assertEqual([f[0] for f in t[0].filas], ["Ana Gil", "Luis Paz"])
 
     def test_varias_hojas_y_hoja_de_notas(self):
         datos = xlsx(("Altas", [["Nombre", "Cuota"], ["Ana Gil", 30]]), ("Bajas", [["Nombre", "Cuota"], ["Luis Paz", 40]]),

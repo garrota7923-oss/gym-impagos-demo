@@ -151,9 +151,11 @@ def tabla(hoja, crudas):
     # Cabecera doble: la de arriba agrupa (valores repetidos por celdas combinadas) y la de abajo detalla
     if pos + 1 < len(filas) and es_cabecera(filas[pos + 1][1], solo_texto=True):
         abajo = filas[pos + 1][1]
-        if len({v for v in cab if v}) < len({v for v in abajo if v}):
+        arriba = [v for v in cab if v]
+        if len(set(arriba)) < len(arriba) and len(set(arriba)) < len({v for v in abajo if v}):   # solo si hay repetidos
             cab = [f"{a} / {b}" if a and b and a != b else (b or a) for a, b in zip(cab, abajo + [None] * len(cab))]
             pos += 1
+            n_cab = filas[pos][0]                       # fila_cabecera: la fila de abajo, la del detalle
     ultima = max(c for c, v in enumerate(cab) if v is not None)
     cab = [v if v is not None else f"(columna {c + 1})" for c, v in enumerate(cab[:ultima + 1])]
     t = Tabla(hoja, n_cab, cab, [], [], avisos)
