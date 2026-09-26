@@ -9,7 +9,7 @@ Claude y Codex: leed esto al empezar y actualizadlo al acabar. Borrad lo viejo; 
 - B2: `rasgos_celdas.py` (rasgos por celda, lo usan notebook y lector: si cambia, reentrenar) + `notebooks/modelo_celdas.ipynb` -> `modelos/modelo_celdas.joblib` (0,7 MB, 99,99% en examen 250/50).
 - B2b: generador con 3 formatos (bloques, semana = dias en columnas y varios nombres por celda, lista = una fila por reserva) + `familias.csv`. Dejando fuera cada familia: 99,74% (peor 96,56%). Notebook ~3 min.
 - B2b-2: `datos/a_mano/` = examen con 3 Excels inventados a mano (nunca para entrenar) + `etiquetas.csv` (por celda) + `esperado.csv` (reservas, verdad para B3). 100% por celda (antes 52%).
-- B3a: `lector_archivos.py` `leer(nombre, bytes)` -> (tablas, avisos): xlsx/csv (separador y codificacion solos), todas las hojas, cabecera real (titulos, cabecera doble combinada), quita filas vacias, TOTAL y duplicados exactos. Tests: `python -m unittest discover tests`.
+- B3a: `lector_archivos.py` `leer(nombre, bytes)` -> (tablas, avisos): xlsx/xls/csv (xls con `xlrd==2.0.2`, OK de Diego; separador y codificacion solos), todas las hojas, cabecera real (titulos, cabecera doble combinada), quita filas vacias, TOTAL y duplicados exactos. Tests: `python -m unittest discover tests`.
 - Para B5: en "semana" una celda trae varios nombres (separar por / , ; -) y la marca de prueba va en el nombre concreto; en "lista" la marca de prueba puede ir en la columna de observaciones.
 - B3/B4: anadir `scikit-learn==1.9.1` y `joblib` a requirements.txt (el modelo solo carga con esa version). OK de Diego ya dado.
 - A5: en cuentas `DEMO_EMAILS`, Ajustes oculta "Cambiar contrasena" y "Dar de baja". Sin `DEMO_EMAILS` en secrets no protege nada.

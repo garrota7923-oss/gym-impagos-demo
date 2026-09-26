@@ -33,7 +33,6 @@ Esto es orientacion, no asesoria legal: antes del primer cliente real, que lo re
 - Demo: el visitante puede renombrar el negocio en Ajustes > Mi negocio y el reset no devuelve el nombre original.
 - **Examen por opcion no vista (S).** Dejar fuera todos los Excels con un valor de formato (p. ej. horas "rango" o dias "corto"): eso si es un formato nuevo, a diferencia de dejar fuera una familia (99,99%, porque combina opciones ya vistas).
 - **Dias con fecha como tipo DIA (S).** `rasgos_celdas.tipo` trata "Lunes 5 oct", "01/10/2026" y las celdas de fecha (datetime) como texto u hora; el modelo acierta por contexto, pero al dejar fuera la familia 9 (semana + "Lunes 5 oct") baja a 96,56%. Ampliar RE_DIA y reentrenar.
-- **Excel .xls antiguo (S).** Hoy se pide guardarlo como .xlsx; leerlo directamente necesita `xlrd` (dependencia nueva, OK de Diego).
 - **Cabeceras con fechas (S).** Una cabecera cuyas celdas son fechas de Excel (p. ej. meses como 01/09/2026) no se reconoce como cabecera. Anadir ese tipo al lector y un test.
 
 ## Descartado por coste o legalidad

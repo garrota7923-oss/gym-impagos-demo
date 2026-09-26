@@ -2,6 +2,7 @@
 import io
 import sys
 import unittest
+from datetime import datetime
 from pathlib import Path
 from openpyxl import Workbook
 
@@ -67,8 +68,16 @@ class TestLector(unittest.TestCase):
         self.assertEqual([x.hoja for x in t], ["Altas", "Bajas"])
         self.assertEqual(len(avisos), 1)
 
+    def test_xls_antiguo(self):
+        """tests/datos/socios_antiguo.xls: datos inventados guardados en formato Excel 97-2003."""
+        t, avisos = leer("socios_antiguo.xls", (RAIZ / "tests" / "datos" / "socios_antiguo.xls").read_bytes())
+        self.assertEqual(t[0].cabecera, ["SOCIO / Nombre", "SOCIO / Alta", "PAGOS / Cuota"])
+        self.assertEqual(t[0].filas, [["Ana Gil", datetime(2026, 3, 1), 30], ["Luis Paz", datetime(2026, 9, 15), 42.5]])
+        self.assertEqual(len(t[0].avisos), 2)                   # titulo y total
+        self.assertEqual(len(avisos), 1)                        # hoja Notas
+
     def test_errores_claros(self):
-        for nombre, datos in [("a.xls", b"x"), ("a.pdf", b"x"), ("a.xlsx", b"no es un excel"), ("a.csv", b"")]:
+        for nombre, datos in [("a.xls", b"no es un excel"), ("a.pdf", b"x"), ("a.xlsx", b"no es un excel"), ("a.csv", b"")]:
             with self.assertRaises(ErrorLectura):
                 leer(nombre, datos)
 

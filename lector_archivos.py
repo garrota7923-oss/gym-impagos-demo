@@ -1,4 +1,4 @@
-"""Lectura robusta de listas en Excel o CSV (B3a). Solo encuentra la tabla: no decide que es cada columna (eso es B4).
+"""Lectura robusta de listas en Excel (.xlsx y .xls) o CSV (B3a). Solo encuentra la tabla: no decide que es cada columna (eso es B4).
 Uso: tablas, avisos = leer(nombre_archivo, contenido_en_bytes)
 Cada Tabla trae la cabecera real (saltando titulos, filas vacias y cabeceras dobles) y las filas utiles,
 sin filas vacias, sin TOTAL y sin duplicados exactos. Todo lo descartado queda explicado en los avisos."""
@@ -6,6 +6,7 @@ import csv
 import io
 import re
 from dataclasses import dataclass, field
+import xlrd
 from openpyxl import load_workbook
 from rasgos_celdas import limpiar
 
@@ -39,9 +40,12 @@ def leer(nombre, datos):
         except Exception as e:
             raise ErrorLectura("No se puede abrir el Excel. Comprueba que no esta danado ni protegido con contrasena.") from e
     elif ext == "xls":
-        raise ErrorLectura("Es un Excel antiguo (.xls). Abrelo en Excel, guardalo como .xlsx y vuelve a subirlo.")
+        try:
+            hojas = leer_xls(datos)
+        except Exception as e:
+            raise ErrorLectura("No se puede abrir el Excel antiguo (.xls). Guardalo como .xlsx desde Excel y vuelve a subirlo.") from e
     else:
-        raise ErrorLectura("Solo se pueden subir archivos .xlsx o .csv.")
+        raise ErrorLectura("Solo se pueden subir archivos .xlsx, .xls o .csv.")
     tablas, avisos = [], []
     for hoja, filas in hojas.items():
         t = tabla(hoja, filas)
@@ -83,6 +87,35 @@ def leer_xlsx(datos):
                 for c in range(rango.min_col - 1, rango.max_col):
                     filas[f][c] = v
         hojas[ws.title] = filas
+    return hojas
+
+
+def leer_xls(datos):
+    """Excel antiguo (97-2003) con xlrd. Mismo resultado que leer_xlsx: fechas como datetime y enteros como int."""
+    wb = xlrd.open_workbook(file_contents=datos, formatting_info=True)
+    hojas = {}
+    for sh in wb.sheets():
+        filas = []
+        for f in range(sh.nrows):
+            fila = []
+            for c in range(sh.ncols):
+                celda = sh.cell(f, c)
+                v = celda.value
+                if celda.ctype == xlrd.XL_CELL_DATE:
+                    v = xlrd.xldate.xldate_as_datetime(v, wb.datemode)
+                elif celda.ctype == xlrd.XL_CELL_NUMBER and v == int(v):
+                    v = int(v)
+                elif celda.ctype == xlrd.XL_CELL_BOOLEAN:
+                    v = bool(v)
+                elif celda.ctype in (xlrd.XL_CELL_EMPTY, xlrd.XL_CELL_BLANK, xlrd.XL_CELL_ERROR):
+                    v = None
+                fila.append(v)
+            filas.append(fila)
+        for f0, f1, c0, c1 in sh.merged_cells:          # celda combinada: el valor vale para todo el rango
+            for f in range(f0, f1):
+                for c in range(c0, c1):
+                    filas[f][c] = filas[f0][c0]
+        hojas[sh.name] = filas
     return hojas
 
 
